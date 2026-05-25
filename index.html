@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,67 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard Comercial — Grupo TopRH</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js">
-// ── DIAS ÚTEIS RESTANTES ─────────────────────────────────────────────────────
-(function() {
-  const FERIADOS = [
-    '2026-01-01','2026-01-25','2026-02-16','2026-02-17','2026-02-18',
-    '2026-04-03','2026-04-21','2026-05-01','2026-06-04','2026-07-09',
-    '2026-09-07','2026-10-12','2026-11-02','2026-11-15','2026-11-20','2026-12-25'
-  ];
-
-  function diasUteisRestantes() {
-    const hoje = new Date();
-    hoje.setHours(0,0,0,0);
-    const ultimoDia = new Date(hoje.getFullYear(), hoje.getMonth()+1, 0);
-    let count = 0;
-    for (let d = new Date(hoje); d <= ultimoDia; d.setDate(d.getDate()+1)) {
-      const dow = d.getDay();
-      if (dow === 0 || dow === 6) continue; // sábado/domingo
-      const iso = d.toISOString().slice(0,10);
-      if (FERIADOS.includes(iso)) continue;
-      if (d > hoje) count++; // não conta hoje
-    }
-    return count;
-  }
-
-  function fmt(v) {
-    return 'R$ ' + Math.round(v).toLocaleString('pt-BR');
-  }
-
-  const dias = diasUteisRestantes();
-
-  // Ari
-  const metaAri    = 575000;
-  const realAri    = 108082;
-  const abertoAri  = 645432;
-  const faltaAri   = metaAri - realAri;
-  const pctAri     = abertoAri > 0 ? Math.round(faltaAri / abertoAri * 100) : 0;
-  const possivelAri = abertoAri >= faltaAri;
-
-  document.getElementById('crTitleAri').textContent = `Conta rápida — ${dias} dia${dias!==1?'s':''} útil${dias!==1?'s':''} restante${dias!==1?'s':''}`;
-  document.getElementById('crFaltaAri').textContent = fmt(faltaAri);
-  document.getElementById('crPctAri').textContent   = pctAri + '%';
-  const stAri = document.getElementById('crStatusAri');
-  stAri.textContent  = possivelAri ? '✓ Possível' : '✗ Atenção';
-  stAri.style.color  = possivelAri ? '#7dc148' : '#e24b4a';
-
-  // Assunta
-  const metaAss    = 200000;
-  const realAss    = 32924;
-  const abertoAss  = 415269;
-  const faltaAss   = metaAss - realAss;
-  const pctAss     = abertoAss > 0 ? Math.round(faltaAss / abertoAss * 100) : 0;
-  const possivelAss = abertoAss >= faltaAss;
-
-  document.getElementById('crTitleAss').textContent = `Conta rápida — ${dias} dia${dias!==1?'s':''} útil${dias!==1?'s':''} restante${dias!==1?'s':''}`;
-  document.getElementById('crFaltaAss').textContent = fmt(faltaAss);
-  document.getElementById('crPctAss').textContent   = pctAss + '%';
-  const stAss = document.getElementById('crStatusAss');
-  stAss.textContent  = possivelAss ? '✓ Possível' : '✗ Atenção';
-  stAss.style.color  = possivelAss ? '#7dc148' : '#e24b4a';
-})();
-</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
@@ -81,6 +22,11 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
 .header-badge{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue-light);background:rgba(14,170,226,0.1);border:1px solid rgba(14,170,226,0.3);padding:4px 12px;border-radius:20px;}
 .header-date{font-size:12px;color:var(--text-muted);}
 .container{max-width:1200px;margin:0 auto;padding:2rem;}
+.loading-overlay{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;gap:16px;}
+.loading-spinner{width:40px;height:40px;border:3px solid rgba(14,170,226,0.2);border-top-color:#0eaae2;border-radius:50%;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-text{font-family:'Montserrat',sans-serif;font-size:13px;color:var(--text-muted);letter-spacing:0.1em;}
+.error-box{background:rgba(226,75,74,0.1);border:1px solid rgba(226,75,74,0.3);border-radius:12px;padding:1.5rem;text-align:center;color:#f87171;font-family:'Montserrat',sans-serif;font-size:13px;margin:2rem auto;max-width:500px;}
 .visao-geral{background:linear-gradient(135deg,#0a3d6b 0%,#0c63a9 50%,#0e7fc4 100%);border-radius:16px;padding:2rem;margin-bottom:2rem;}
 .visao-geral-title{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:rgba(255,255,255,0.8);margin-bottom:1.25rem;display:flex;align-items:center;gap:8px;}
 .visao-geral-title::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.25);}
@@ -112,6 +58,7 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
 .mini-stat-val{font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;color:var(--text);}
 .mini-stat-val.green{color:var(--green);}
 .mini-stat-val.blue{color:var(--blue-light);}
+.mini-stat-label{font-size:10px;color:var(--text-muted);margin-top:3px;}
 .conta-rapida{background:rgba(14,170,226,0.06);border:1px solid rgba(14,170,226,0.2);border-radius:10px;padding:1rem;margin-bottom:1rem;}
 .conta-rapida.green{background:rgba(125,193,72,0.06);border-color:rgba(125,193,72,0.2);}
 .conta-rapida-title{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0eaae2;margin-bottom:10px;}
@@ -120,18 +67,7 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
 .cr-item{text-align:center;}
 .cr-val{font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px;}
 .cr-label{font-size:10px;color:#8b949e;margin-top:3px;}
-.pat-cold-box{background:rgba(116,170,226,0.08);border:1px solid rgba(116,170,226,0.25);border-radius:10px;padding:.9rem;margin-bottom:1rem;display:flex;align-items:flex-start;gap:10px;}
-.pat-cold-icon{width:32px;height:32px;border-radius:50%;background:rgba(116,170,226,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;}
-.pat-cold-title{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cold);margin-bottom:4px;}
-.pat-cold-empresa{font-weight:600;font-size:13px;color:var(--text);}
-.pat-cold-spec{font-size:11px;color:var(--text-muted);margin-top:2px;}
-.pat-cold-val{font-family:'Montserrat',sans-serif;font-weight:700;font-size:13px;color:var(--cold);margin-top:4px;}
-.pat-cold-alert{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:600;font-family:'Montserrat',sans-serif;background:rgba(116,170,226,0.15);color:var(--cold);padding:2px 8px;border-radius:10px;margin-top:5px;}
 .sub-title{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;}
-.fechado-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-size:12px;gap:8px;}
-.fechado-row:last-child{border-bottom:none;}
-.fechado-empresa{font-weight:500;color:var(--text);flex:1;}
-.fechado-val{font-weight:700;color:var(--green);white-space:nowrap;font-size:11px;}
 .aberto-list{display:flex;flex-direction:column;gap:4px;}
 .aberto-row{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--bg-card2);border-radius:8px;font-size:12px;border-left:3px solid transparent;}
 .aberto-row.quente{border-left-color:var(--red);}
@@ -158,28 +94,60 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
 .comp-progress{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:14px;overflow:hidden;}
 .comp-progress-fill{height:100%;border-radius:2px;}
 .chart-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:2rem;}
-.mini-stat-label{font-size:10px;color:var(--text-muted);margin-top:3px;}
 .footer{text-align:center;padding:2rem;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);}
+.pat-table{width:100%;border-collapse:collapse;font-size:12px;}
+.pat-table th{text-align:left;padding:4px 6px;color:var(--text-muted);font-weight:600;font-size:10px;border-bottom:1px solid rgba(255,255,255,0.08);}
+.pat-table td{padding:6px;font-size:12px;}
+.badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;}
+.badge.quente{background:rgba(226,75,74,0.15);color:#f87171;}
+.badge.morno{background:rgba(230,178,34,0.15);color:#fbbf24;}
+.badge.frio{background:rgba(116,170,226,0.15);color:var(--cold);}
 ::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:var(--bg);}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 </style>
 </head>
 <body>
+
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Carregando dados da planilha...</div>
+</div>
+
 <header class="header">
   <div class="logo">GRUPO <span>TOP</span>RH</div>
   <div class="header-badge">Dashboard Comercial</div>
-  <div class="header-date">Maio 2026</div>
+  <div class="header-date" id="headerDate">—</div>
 </header>
-<main class="container">
 
+<main class="container" id="mainContent" style="display:none;">
+
+  <!-- VISÃO GERAL -->
   <div class="visao-geral">
-    <div class="visao-geral-title">Visão geral — Maio 2026</div>
+    <div class="visao-geral-title" id="visaoTitle">Visão geral — carregando...</div>
     <div class="kpi-grid">
-      <div class="kpi-card"><div class="kpi-label">Meta total do mês</div><div class="kpi-value">R$ 775K</div><div class="kpi-sub">Ari R$575K · Assunta R$200K</div></div>
-      <div class="kpi-card"><div class="kpi-label">Realizado Maio</div><div class="kpi-value amber">R$ 141K</div><div class="kpi-sub">18,2% da meta total</div><div class="kpi-bar"><div class="kpi-bar-fill" style="width:18.2%;"></div></div></div>
-      <div class="kpi-card"><div class="kpi-label">Em aberto</div><div class="kpi-value green">R$ 1,06M</div><div class="kpi-sub">Propostas ativas</div></div>
-      <div class="kpi-card"><div class="kpi-label">Marcas aquecidas</div><div class="kpi-value">37</div><div class="kpi-sub">Ari 22 · Assunta 15</div></div>
+      <div class="kpi-card">
+        <div class="kpi-label">Meta total do mês</div>
+        <div class="kpi-value" id="kpiMeta">—</div>
+        <div class="kpi-sub" id="kpiMetaSub">—</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Realizado Mês</div>
+        <div class="kpi-value amber" id="kpiReal">—</div>
+        <div class="kpi-sub" id="kpiRealSub">—</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" id="kpiRealBar" style="width:0%;"></div></div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Em aberto</div>
+        <div class="kpi-value green" id="kpiAberto">—</div>
+        <div class="kpi-sub">Propostas ativas</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Marcas aquecidas</div>
+        <div class="kpi-value" id="kpiAquecidas">—</div>
+        <div class="kpi-sub" id="kpiAquecSub">—</div>
+      </div>
     </div>
   </div>
 
@@ -189,16 +157,19 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
   <div class="vendedor-wrap">
     <div class="vendedor-header">
       <div class="avatar">AR</div>
-      <div class="vendedor-info"><div class="vendedor-name">Ari</div><div class="vendedor-meta">Meta Maio: R$ 575.000</div></div>
-      <div class="vendedor-pct">18,8%<span>da meta</span></div>
+      <div class="vendedor-info">
+        <div class="vendedor-name">Ari</div>
+        <div class="vendedor-meta" id="metaAri">Meta: —</div>
+      </div>
+      <div class="vendedor-pct" id="pctAri">—<span>da meta</span></div>
     </div>
     <div class="vendedor-body">
       <div class="col-left">
         <div class="mini-stats">
-          <div class="mini-stat"><div class="mini-stat-val green">R$ 108K</div><div class="mini-stat-label">Realizado</div></div>
-          <div class="mini-stat"><div class="mini-stat-val blue">R$ 645K</div><div class="mini-stat-label">Em aberto</div></div>
-          <div class="mini-stat"><div class="mini-stat-val">23</div><div class="mini-stat-label">Propostas</div></div>
-          <div class="mini-stat"><div class="mini-stat-val" style="color:#e24b4a;">R$ 644K</div><div class="mini-stat-label">Gap acumulado</div></div>
+          <div class="mini-stat"><div class="mini-stat-val green" id="realAri">—</div><div class="mini-stat-label">Realizado</div></div>
+          <div class="mini-stat"><div class="mini-stat-val blue" id="abertoAri">—</div><div class="mini-stat-label">Em aberto</div></div>
+          <div class="mini-stat"><div class="mini-stat-val" id="qtdAri">—</div><div class="mini-stat-label">Propostas</div></div>
+          <div class="mini-stat"><div class="mini-stat-val" style="color:#e24b4a;" id="gapAri">—</div><div class="mini-stat-label">Gap acumulado</div></div>
         </div>
         <div class="conta-rapida">
           <div class="conta-rapida-title" id="crTitleAri">Conta rápida — calculando...</div>
@@ -210,62 +181,18 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
         </div>
         <div style="background:var(--bg-card2);border:1px solid rgba(116,170,226,0.2);border-radius:10px;padding:1rem;margin-bottom:1rem;">
           <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cold);margin-bottom:10px;">⭐ Patrocínio Top of Mind</div>
-          <table style="width:100%;border-collapse:collapse;font-size:12px;">
-            <thead>
-              <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
-                <th style="text-align:left;padding:4px 6px;color:var(--text-muted);font-weight:600;font-size:10px;">Marca</th>
-                <th style="text-align:left;padding:4px 6px;color:var(--text-muted);font-weight:600;font-size:10px;">Cota</th>
-                <th style="text-align:right;padding:4px 6px;color:var(--text-muted);font-weight:600;font-size:10px;">Valor</th>
-                <th style="text-align:center;padding:4px 6px;color:var(--text-muted);font-weight:600;font-size:10px;">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                <td style="padding:6px 6px;font-weight:500;color:var(--text);">VR</td>
-                <td style="padding:6px 6px;color:var(--text-muted);font-size:11px;">Premium - 2a fase</td>
-                <td style="padding:6px 6px;text-align:right;font-weight:600;color:var(--cold);">R$ 94.032</td>
-                <td style="padding:6px 6px;text-align:center;"><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(230,178,34,0.15);color:#fbbf24;font-weight:600;">🟡 Morno</span></td>
-              </tr>
-            </tbody>
+          <table class="pat-table">
+            <thead><tr><th>Marca</th><th>Cota</th><th style="text-align:right;">Valor</th><th style="text-align:center;">Status</th></tr></thead>
+            <tbody id="patAri"></tbody>
           </table>
         </div>
-        <div class="sub-title">Fechados em Maio — por semana</div>
-        <div style="position:relative;height:130px;margin-bottom:4px;">
-          <canvas id="evolAri"></canvas>
-        </div>
-        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);padding:0 2px;">
-          <span>S1 01–07/Mai</span>
-          <span>S2 08–14/Mai</span>
-          <span>S3 15–21/Mai</span>
-          <span>S4 22–31/Mai</span>
-        </div>
+        <div class="sub-title">Fechados no mês — por semana</div>
+        <div style="position:relative;height:130px;margin-bottom:4px;"><canvas id="evolAri"></canvas></div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);padding:0 2px;" id="semLabelsAri"></div>
       </div>
       <div class="col-right">
         <div class="sub-title">Marcas quentes e mornas — maior para menor</div>
-        <div class="aberto-list">
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Senac</span><span class="pipe-prod">RH Top Sync + Impressos + Eu Quero Estrela</span><span class="pipe-val">R$ 108.507</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Seconci</span><span class="pipe-prod">RH Top Sync + Eu Quero Estrela + Impressos</span><span class="pipe-val">R$ 67.275</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Smach Gift</span><span class="pipe-prod">EncontRHo + RH Pra Você + RH Top Sync</span><span class="pipe-val">R$ 52.440</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Cia de Estágio</span><span class="pipe-prod">Impressos + Eu Quero Estrela</span><span class="pipe-val">R$ 39.980</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Inhire</span><span class="pipe-prod">RH Top Sync</span><span class="pipe-val">R$ 36.240</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Adriano Lima</span><span class="pipe-prod">Impressos + Eu Quero Estrela</span><span class="pipe-val">R$ 35.020</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Grupo Mast</span><span class="pipe-prod">Impressos + Eu Quero Estrela</span><span class="pipe-val">R$ 35.020</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Zuki</span><span class="pipe-prod">Impressos + Eu Quero Estrela</span><span class="pipe-val">R$ 35.020</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Uoledtech</span><span class="pipe-prod">Impressos - Os Eleitos</span><span class="pipe-val">R$ 28.435</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">TotalPass</span><span class="pipe-prod">Eu Quero Estrela</span><span class="pipe-val">R$ 16.675</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Extended Disc</span><span class="pipe-prod">Eu Quero Estrela</span><span class="pipe-val">R$ 16.675</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Ticket</span><span class="pipe-prod">Eu Quero Estrela</span><span class="pipe-val">R$ 16.675</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">RB / Ticket</span><span class="pipe-prod">Eu Quero Estrela</span><span class="pipe-val">R$ 16.675</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">Pref. Gretz</span><span class="pipe-prod">Impressos + Eu Quero Estrela</span><span class="pipe-val">R$ 28.650</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">Newbe</span><span class="pipe-prod">Impressos + Eu Quero Estrela</span><span class="pipe-val">R$ 35.020</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">Populis</span><span class="pipe-prod">Impressos - Os Eleitos</span><span class="pipe-val">R$ 13.948</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">Revvo</span><span class="pipe-prod">Impressos + Eu Quero Estrela</span><span class="pipe-val">R$ 35.020</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">G.Iinfor</span><span class="pipe-prod">Impressos + Eu Quero Estrela</span><span class="pipe-val">R$ 35.020</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">Benefício Certo</span><span class="pipe-prod">Impressos + Eu Quero Estrela</span><span class="pipe-val">R$ 35.020</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">BenVT</span><span class="pipe-prod">Branded Content / Outros</span><span class="pipe-val">R$ 24.725</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">Senior Sistemas</span><span class="pipe-prod">Branded Content / Outros</span><span class="pipe-val">R$ 24.725</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">VR</span><span class="pipe-prod">Eu Quero Estrela + Impressos</span><span class="pipe-val">R$ 35.020</span></div>
-        </div>
+        <div class="aberto-list" id="listaAri"></div>
       </div>
     </div>
   </div>
@@ -274,16 +201,19 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
   <div class="vendedor-wrap">
     <div class="vendedor-header green-grad">
       <div class="avatar">AS</div>
-      <div class="vendedor-info"><div class="vendedor-name">Assunta</div><div class="vendedor-meta">Meta Maio: R$ 200.000</div></div>
-      <div class="vendedor-pct">16,5%<span>da meta</span></div>
+      <div class="vendedor-info">
+        <div class="vendedor-name">Assunta</div>
+        <div class="vendedor-meta" id="metaAss">Meta: —</div>
+      </div>
+      <div class="vendedor-pct" id="pctAss">—<span>da meta</span></div>
     </div>
     <div class="vendedor-body">
       <div class="col-left">
         <div class="mini-stats">
-          <div class="mini-stat"><div class="mini-stat-val green">R$ 32,9K</div><div class="mini-stat-label">Realizado</div></div>
-          <div class="mini-stat"><div class="mini-stat-val blue">R$ 415K</div><div class="mini-stat-label">Em aberto</div></div>
-          <div class="mini-stat"><div class="mini-stat-val">17</div><div class="mini-stat-label">Propostas</div></div>
-          <div class="mini-stat"><div class="mini-stat-val" style="color:#e24b4a;">R$ 216K</div><div class="mini-stat-label">Gap acumulado</div></div>
+          <div class="mini-stat"><div class="mini-stat-val green" id="realAss">—</div><div class="mini-stat-label">Realizado</div></div>
+          <div class="mini-stat"><div class="mini-stat-val blue" id="abertoAss">—</div><div class="mini-stat-label">Em aberto</div></div>
+          <div class="mini-stat"><div class="mini-stat-val" id="qtdAss">—</div><div class="mini-stat-label">Propostas</div></div>
+          <div class="mini-stat"><div class="mini-stat-val" style="color:#e24b4a;" id="gapAss">—</div><div class="mini-stat-label">Gap acumulado</div></div>
         </div>
         <div class="conta-rapida green">
           <div class="conta-rapida-title" id="crTitleAss">Conta rápida — calculando...</div>
@@ -295,85 +225,18 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
         </div>
         <div style="background:var(--bg-card2);border:1px solid rgba(116,170,226,0.2);border-radius:10px;padding:1rem;margin-bottom:1rem;">
           <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cold);margin-bottom:10px;">⭐ Patrocínio Top of Mind</div>
-          <table style="width:100%;border-collapse:collapse;font-size:12px;">
-            <thead>
-              <tr style="border-bottom:1px solid rgba(255,255,255,0.08);">
-                <th style="text-align:left;padding:4px 6px;color:var(--text-muted);font-weight:600;font-size:10px;">Marca</th>
-                <th style="text-align:left;padding:4px 6px;color:var(--text-muted);font-weight:600;font-size:10px;">Cota</th>
-                <th style="text-align:right;padding:4px 6px;color:var(--text-muted);font-weight:600;font-size:10px;">Valor</th>
-                <th style="text-align:center;padding:4px 6px;color:var(--text-muted);font-weight:600;font-size:10px;">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                <td style="padding:6px 6px;font-weight:500;color:var(--text);">Vidalink</td>
-                <td style="padding:6px 6px;color:var(--text-muted);font-size:11px;">Special - 2a fase</td>
-                <td style="padding:6px 6px;text-align:right;font-weight:600;color:var(--cold);">R$ 70.452</td>
-                <td style="padding:6px 6px;text-align:center;"><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(226,75,74,0.15);color:#f87171;font-weight:600;">🔴 Quente</span></td>
-              </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                <td style="padding:6px 6px;font-weight:500;color:var(--text);">TOTVS</td>
-                <td style="padding:6px 6px;color:var(--text-muted);font-size:11px;">Special - 2a fase</td>
-                <td style="padding:6px 6px;text-align:right;font-weight:600;color:var(--cold);">R$ 70.452</td>
-                <td style="padding:6px 6px;text-align:center;"><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(226,75,74,0.15);color:#f87171;font-weight:600;">🔴 Quente</span></td>
-              </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                <td style="padding:6px 6px;font-weight:500;color:var(--text);">VIXTING</td>
-                <td style="padding:6px 6px;color:var(--text-muted);font-size:11px;">Special - 2a fase</td>
-                <td style="padding:6px 6px;text-align:right;font-weight:600;color:var(--cold);">R$ 70.452</td>
-                <td style="padding:6px 6px;text-align:center;"><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(226,75,74,0.15);color:#f87171;font-weight:600;">🔴 Quente</span></td>
-              </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                <td style="padding:6px 6px;font-weight:500;color:var(--text);">We People</td>
-                <td style="padding:6px 6px;color:var(--text-muted);font-size:11px;">Special - 2a fase</td>
-                <td style="padding:6px 6px;text-align:right;font-weight:600;color:var(--cold);">R$ 70.452</td>
-                <td style="padding:6px 6px;text-align:center;"><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(116,170,226,0.15);color:var(--cold);font-weight:600;">🔵 Frio</span></td>
-              </tr>
-              <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-                <td style="padding:6px 6px;font-weight:500;color:var(--text);">Metlife</td>
-                <td style="padding:6px 6px;color:var(--text-muted);font-size:11px;">Branding</td>
-                <td style="padding:6px 6px;text-align:right;font-weight:600;color:var(--cold);">R$ 57.000</td>
-                <td style="padding:6px 6px;text-align:center;"><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(116,170,226,0.15);color:var(--cold);font-weight:600;">🔵 Frio</span></td>
-              </tr>
-              <tr>
-                <td style="padding:6px 6px;font-weight:500;color:var(--text);">SECULUM</td>
-                <td style="padding:6px 6px;color:var(--text-muted);font-size:11px;">Special - 2a fase</td>
-                <td style="padding:6px 6px;text-align:right;font-weight:600;color:var(--cold);">R$ 70.452</td>
-                <td style="padding:6px 6px;text-align:center;"><span style="font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(116,170,226,0.15);color:var(--cold);font-weight:600;">🔵 Frio</span></td>
-              </tr>
-            </tbody>
+          <table class="pat-table">
+            <thead><tr><th>Marca</th><th>Cota</th><th style="text-align:right;">Valor</th><th style="text-align:center;">Status</th></tr></thead>
+            <tbody id="patAss"></tbody>
           </table>
         </div>
-        <div class="sub-title">Fechados em Maio — por semana</div>
-        <div style="position:relative;height:130px;margin-bottom:4px;">
-          <canvas id="evolAss"></canvas>
-        </div>
-        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);padding:0 2px;">
-          <span>S1 01–07/Mai</span>
-          <span>S2 08–14/Mai</span>
-          <span>S3 15–21/Mai</span>
-          <span>S4 22–31/Mai</span>
-        </div>
+        <div class="sub-title">Fechados no mês — por semana</div>
+        <div style="position:relative;height:130px;margin-bottom:4px;"><canvas id="evolAss"></canvas></div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);padding:0 2px;" id="semLabelsAss"></div>
       </div>
       <div class="col-right">
         <div class="sub-title">Marcas quentes e mornas — maior para menor</div>
-        <div class="aberto-list">
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Wellhub</span><span class="pipe-prod">RH Top Sync + Impressos Os Eleitos</span><span class="pipe-val">R$ 103.485</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Solides</span><span class="pipe-prod">RH Top Sync</span><span class="pipe-val">R$ 75.050</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">SECULUM</span><span class="pipe-prod">RH Top Sync + Impressos</span><span class="pipe-val">R$ 52.440</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">ENGEMED</span><span class="pipe-prod">RH Top Sync + Eu Quero Estrela</span><span class="pipe-val">R$ 45.000</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Alper</span><span class="pipe-prod">RH Pra Você</span><span class="pipe-val">R$ 40.614</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">GUAPECO</span><span class="pipe-prod">EncontRHo</span><span class="pipe-val">R$ 36.600</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">METADADOS</span><span class="pipe-prod">Impressos - Os Eleitos</span><span class="pipe-val">R$ 28.435</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">TOTVS</span><span class="pipe-prod">Top of Mind Patrocínio</span><span class="pipe-val">—</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">VIXTING</span><span class="pipe-prod">Top of Mind Patrocínio + Merchan</span><span class="pipe-val">—</span></div>
-          <div class="aberto-row quente"><div class="temp-dot quente"></div><span class="pipe-empresa">Vidalink</span><span class="pipe-prod">Top of Mind Patrocínio + Impressos</span><span class="pipe-val">—</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">Life Laboral</span><span class="pipe-prod">EncontRHo + Branded Content</span><span class="pipe-val">R$ 76.545</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">Mendes Talent</span><span class="pipe-prod">Eu Quero Estrela + Impressos + Merchan</span><span class="pipe-val">R$ 52.500</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">Avant RH</span><span class="pipe-prod">Eu Quero Estrela + Impressos</span><span class="pipe-val">R$ 36.600</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">Exame</span><span class="pipe-prod">Eu Quero Estrela + Impressos</span><span class="pipe-val">R$ 34.875</span></div>
-          <div class="aberto-row morno"><div class="temp-dot morno"></div><span class="pipe-empresa">Dimep</span><span class="pipe-prod">Impressos - Os Eleitos</span><span class="pipe-val">R$ 28.435</span></div>
-        </div>
+        <div class="aberto-list" id="listaAss"></div>
       </div>
     </div>
   </div>
@@ -383,36 +246,28 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
   <div class="comp-grid">
     <div class="comp-card">
       <div class="comp-name"><div class="comp-name-dot" style="background:#0eaae2;"></div>Ari</div>
-      <div class="comp-row"><span class="comp-row-label">Meta Maio</span><span class="comp-row-val">R$ 575.000</span></div>
-      <div class="comp-row"><span class="comp-row-label">Realizado Maio</span><span class="comp-row-val green">R$ 108.082</span></div>
-      <div class="comp-row"><span class="comp-row-label">% da meta</span><span class="comp-row-val amber">18,8%</span></div>
-      <div class="comp-row"><span class="comp-row-label">Vendido Jan–Mai</span><span class="comp-row-val">R$ 373.588</span></div>
-      <div class="comp-row"><span class="comp-row-label">Meta acumulada Jan–Mai</span><span class="comp-row-val">R$ 1.018.050</span></div>
-      <div class="comp-row"><span class="comp-row-label">Gap acumulado</span><span class="comp-row-val red">− R$ 644.462</span></div>
-      <div class="comp-row"><span class="comp-row-label">Em aberto</span><span class="comp-row-val blue">R$ 645.432</span></div>
-      <div class="comp-row"><span class="comp-row-label">Marcas quentes</span><span class="comp-row-val">13</span></div>
-      <div class="comp-row"><span class="comp-row-label">Marcas mornas</span><span class="comp-row-val">9</span></div>
-      <div class="comp-row"><span class="comp-row-label">Patrocínio Top of Mind</span><span class="comp-row-val cold">1 frio — VR (R$ 94K)</span></div>
-      <div class="comp-progress"><div class="comp-progress-fill" style="width:18.8%;background:linear-gradient(90deg,#0c63a9,#0eaae2);"></div></div>
+      <div id="compAri"></div>
+      <div class="comp-progress"><div class="comp-progress-fill" id="compBarAri" style="background:linear-gradient(90deg,#0c63a9,#0eaae2);"></div></div>
     </div>
     <div class="comp-card">
       <div class="comp-name"><div class="comp-name-dot" style="background:#7dc148;"></div>Assunta</div>
-      <div class="comp-row"><span class="comp-row-label">Meta Maio</span><span class="comp-row-val">R$ 200.000</span></div>
-      <div class="comp-row"><span class="comp-row-label">Realizado Maio</span><span class="comp-row-val green">R$ 32.924</span></div>
-      <div class="comp-row"><span class="comp-row-label">% da meta</span><span class="comp-row-val amber">16,5%</span></div>
-      <div class="comp-row"><span class="comp-row-label">Vendido Jan–Mai</span><span class="comp-row-val">R$ 83.400</span></div>
-      <div class="comp-row"><span class="comp-row-label">Meta acumulada Jan–Mai</span><span class="comp-row-val">R$ 299.900</span></div>
-      <div class="comp-row"><span class="comp-row-label">Gap acumulado</span><span class="comp-row-val red">− R$ 216.500</span></div>
-      <div class="comp-row"><span class="comp-row-label">Em aberto</span><span class="comp-row-val blue">R$ 415.269</span></div>
-      <div class="comp-row"><span class="comp-row-label">Marcas quentes</span><span class="comp-row-val">10</span></div>
-      <div class="comp-row"><span class="comp-row-label">Marcas mornas</span><span class="comp-row-val">5</span></div>
-      <div class="comp-row"><span class="comp-row-label">Patrocínio Top of Mind</span><span class="comp-row-val cold">1 frio (Metlife) · 3 quentes (TOTVS, VIXTING, Vidalink)</span></div>
-      <div class="comp-progress"><div class="comp-progress-fill" style="width:16.5%;background:linear-gradient(90deg,#00ada5,#7dc148);"></div></div>
+      <div id="compAss"></div>
+      <div class="comp-progress"><div class="comp-progress-fill" id="compBarAss" style="background:linear-gradient(90deg,#00ada5,#7dc148);"></div></div>
     </div>
   </div>
 
-  <!-- TABELA VALORES POR PRODUTO -->
-  <div class="section-label">Valor total ofertado por produto — Maio</div>
+  <!-- GRÁFICO PRODUTOS -->
+  <div class="section-label">Propostas por produto</div>
+  <div class="chart-card">
+    <div style="position:relative;height:220px;"><canvas id="prodChart"></canvas></div>
+    <div style="display:flex;align-items:center;gap:16px;margin-top:12px;font-size:11px;color:var(--text-muted);">
+      <span><span style="display:inline-block;width:10px;height:10px;background:#0eaae2;border-radius:2px;margin-right:4px;"></span>Ari</span>
+      <span><span style="display:inline-block;width:10px;height:10px;background:#7dc148;border-radius:2px;margin-right:4px;"></span>Assunta</span>
+    </div>
+  </div>
+
+  <!-- TABELA PRODUTOS -->
+  <div class="section-label">Valor total ofertado por produto</div>
   <div class="chart-card">
     <table style="width:100%;border-collapse:collapse;font-size:13px;">
       <thead>
@@ -423,195 +278,511 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
           <th style="text-align:right;padding:10px 14px;background:var(--bg-card2);color:var(--text-muted);font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border);">Total (R$)</th>
         </tr>
       </thead>
-      <tbody id="prodValTable">
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-          <td style="padding:10px 14px;color:var(--text);font-weight:500;">Top of Mind Patrocínio</td>
-          <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600;">R$ 94.032</td>
-          <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600;">R$ 469.549</td>
-          <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700;">R$ 563.581</td>
-        </tr>
-        <tr style="background:var(--bg-card2);border-bottom:1px solid rgba(255,255,255,0.05);">
-          <td style="padding:10px 14px;color:var(--text);font-weight:500;">Eu Quero Essa Estrela</td>
-          <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600;">R$ 221.786</td>
-          <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600;">R$ 78.200</td>
-          <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700;">R$ 299.986</td>
-        </tr>
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-          <td style="padding:10px 14px;color:var(--text);font-weight:500;">Impressos - Os Eleitos</td>
-          <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600;">R$ 256.346</td>
-          <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600;">R$ 293.740</td>
-          <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700;">R$ 550.086</td>
-        </tr>
-        <tr style="background:var(--bg-card2);border-bottom:1px solid rgba(255,255,255,0.05);">
-          <td style="padding:10px 14px;color:var(--text);font-weight:500;">Impressos - Os Vencedores</td>
-          <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600;">—</td>
-          <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600;">—</td>
-          <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700;">—</td>
-        </tr>
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-          <td style="padding:10px 14px;color:var(--text);font-weight:500;">RH Top Sync</td>
-          <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600;">R$ 148.085</td>
-          <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600;">R$ 191.250</td>
-          <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700;">R$ 339.335</td>
-        </tr>
-        <tr style="background:var(--bg-card2);border-bottom:1px solid rgba(255,255,255,0.05);">
-          <td style="padding:10px 14px;color:var(--text);font-weight:500;">RH Pra Você</td>
-          <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600;">R$ 54.280</td>
-          <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600;">R$ 80.989</td>
-          <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700;">R$ 135.269</td>
-        </tr>
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-          <td style="padding:10px 14px;color:var(--text);font-weight:500;">EncontRHo</td>
-          <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600;">R$ 18.975</td>
-          <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600;">R$ 37.950</td>
-          <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700;">R$ 56.925</td>
-        </tr>
-        <tr style="background:var(--bg-card2);border-bottom:1px solid rgba(255,255,255,0.05);">
-          <td style="padding:10px 14px;color:var(--text);font-weight:500;">Merchan</td>
-          <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600;">—</td>
-          <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600;">R$ 15.900</td>
-          <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700;">R$ 15.900</td>
-        </tr>
-        <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-          <td style="padding:10px 14px;color:var(--text);font-weight:500;">Branded Content / Outros</td>
-          <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600;">R$ 24.752</td>
-          <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600;">R$ 12.570</td>
-          <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700;">R$ 37.322</td>
-        </tr>
-        <tr style="background:rgba(14,170,226,0.08);border-top:2px solid rgba(14,170,226,0.3);">
-          <td style="padding:12px 14px;color:var(--text);font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;">TOTAL</td>
-          <td style="padding:12px 14px;text-align:right;color:#0eaae2;font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;">R$ 818.256</td>
-          <td style="padding:12px 14px;text-align:right;color:#7dc148;font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;">R$ 1.180.148</td>
-          <td style="padding:12px 14px;text-align:right;color:var(--text);font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;">R$ 1.998.404</td>
-        </tr>
-      </tbody>
+      <tbody id="prodValTable"></tbody>
     </table>
   </div>
 
 </main>
-<footer class="footer">Grupo TopRH · Dashboard Comercial · Maio 2026 · Dados extraídos da planilha Pipeline_Comercial_2026</footer>
+
+<footer class="footer" id="footerEl" style="display:none;">Grupo TopRH · Dashboard Comercial · Dados carregados da planilha Pipeline_Comercial_2026</footer>
 
 <script>
-new Chart(document.getElementById('prodChart'),{
-  type:'bar',
-  data:{
-    labels:['Eu Quero Estrela','Impressos Os Eleitos','RH Top Sync','RH Pra Você','Top of Mind Patrocínio','Branded Content','EncontRHo'],
-    datasets:[
-      {label:'Ari',    data:[23,22,5,4,1,2,1],backgroundColor:'#0eaae2',borderRadius:4,borderSkipped:false},
-      {label:'Assunta',data:[5,11,4,2,4,2,2], backgroundColor:'#7dc148',borderRadius:4,borderSkipped:false}
-    ]
-  },
-  options:{
-    responsive:true,maintainAspectRatio:false,
-    plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c2333',borderColor:'rgba(14,170,226,0.3)',borderWidth:1,titleColor:'#e6edf3',bodyColor:'#8b949e',padding:12,
-      callbacks:{
-        title:function(i){return i[0].label;},
-        beforeBody:function(i){const t=[28,33,9,6,5,4,3];return 'Total: '+t[i[0].dataIndex]+' propostas';},
-        label:function(i){const t=[28,33,9,6,5,4,3];const p=Math.round(i.raw/t[i.dataIndex]*100);return ' '+i.dataset.label+': '+i.raw+' ('+p+'%)';}
-      }
-    }},
-    scales:{
-      x:{ticks:{color:'#8b949e',font:{size:11,family:'Roboto'},maxRotation:30,autoSkip:false},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.08)'}},
-      y:{ticks:{color:'#8b949e',stepSize:5,font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.08)'}}
-    }
-  }
-});
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
+const SHEET_ID = '1hcv2OLkQM89VQ_jLv1DuTD_rQcpHG9FOq-iW0Zm3lec';
+const SHEET_NAMES = { ari: 'Ari', ass: 'Assunta', comp: 'Comparativo' };
 
-// ── EVOLUÇÃO SEMANAL ─────────────────────────────────────────────────────────
-function evolChart(id, semanal, color) {
-  new Chart(document.getElementById(id), {
-    type:'bar',
-    data:{
-      labels:['S1','S2','S3','S4'],
-      datasets:[{
-        label:'Fechado',
-        data:semanal,
-        backgroundColor:color+'bb',
-        borderRadius:6,
-        borderSkipped:false,
-      }]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          backgroundColor:'#1c2333',borderColor:'rgba(14,170,226,0.3)',borderWidth:1,
-          titleColor:'#e6edf3',bodyColor:'#8b949e',padding:10,
-          callbacks:{
-            label:function(i){return ' R$ '+Math.round(i.raw).toLocaleString('pt-BR');}
-          }
-        }
-      },
-      scales:{
-        x:{ticks:{color:'#8b949e',font:{size:10}},grid:{display:false},border:{display:false}},
-        y:{ticks:{color:'#8b949e',font:{size:10},callback:function(v){return 'R$'+Math.round(v/1000)+'K';}},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}}
-      }
-    }
+// Feriados SP 2026
+const FERIADOS = [
+  '2026-01-01','2026-01-25','2026-02-16','2026-02-17','2026-02-18',
+  '2026-04-03','2026-04-21','2026-05-01','2026-06-04','2026-07-09',
+  '2026-09-07','2026-10-12','2026-11-02','2026-11-15','2026-11-20','2026-12-25'
+];
+
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
+function fmtR(v, decimals=0) {
+  if (!v && v !== 0) return '—';
+  const n = Math.round(v * Math.pow(10,decimals)) / Math.pow(10,decimals);
+  return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:decimals, maximumFractionDigits:decimals});
+}
+function fmtK(v) {
+  if (!v && v !== 0) return '—';
+  if (Math.abs(v) >= 1000000) return 'R$ ' + (v/1000000).toFixed(1).replace('.',',') + 'M';
+  if (Math.abs(v) >= 1000) return 'R$ ' + Math.round(v/1000) + 'K';
+  return fmtR(v);
+}
+function parseVal(s) {
+  if (!s) return 0;
+  const clean = String(s).replace(/R\$\s*/g,'').replace(/\./g,'').replace(',','.').trim();
+  return parseFloat(clean) || 0;
+}
+function diasUteisRestantes() {
+  const hoje = new Date(); hoje.setHours(0,0,0,0);
+  const ultimo = new Date(hoje.getFullYear(), hoje.getMonth()+1, 0);
+  let c = 0;
+  for (let d = new Date(hoje); d <= ultimo; d.setDate(d.getDate()+1)) {
+    if (d <= hoje) continue;
+    const dow = d.getDay();
+    if (dow===0||dow===6) continue;
+    if (FERIADOS.includes(d.toISOString().slice(0,10))) continue;
+    c++;
+  }
+  return c;
+}
+function mesAtual() {
+  return new Date().toLocaleString('pt-BR',{month:'long',year:'numeric'});
+}
+
+// ─── FETCH SHEETS ─────────────────────────────────────────────────────────────
+async function fetchSheet(sheetName) {
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+  const r = await fetch(url);
+  const text = await r.text();
+  const json = JSON.parse(text.replace(/^[^(]+\(/, '').replace(/\);?\s*$/, ''));
+  return json.table;
+}
+
+function tableToRows(table) {
+  // returns array of objects keyed by column label (row 0 = headers)
+  if (!table || !table.rows || table.rows.length < 2) return [];
+  const cols = table.cols.map(c => c.label || '');
+  return table.rows.map(row => {
+    const obj = {};
+    cols.forEach((col, i) => {
+      const cell = row.c && row.c[i];
+      obj[col] = cell ? (cell.v !== null && cell.v !== undefined ? cell.v : (cell.f || '')) : '';
+    });
+    return obj;
   });
 }
-evolChart('evolAri', [0,126382,0,0], '#0eaae2');
-evolChart('evolAss', [0,32924,0,0],  '#7dc148');
 
-// ── DIAS ÚTEIS RESTANTES ─────────────────────────────────────────────────────
-(function() {
-  const FERIADOS = [
-    '2026-01-01','2026-01-25','2026-02-16','2026-02-17','2026-02-18',
-    '2026-04-03','2026-04-21','2026-05-01','2026-06-04','2026-07-09',
-    '2026-09-07','2026-10-12','2026-11-02','2026-11-15','2026-11-20','2026-12-25'
-  ];
+// ─── PARSE PIPELINE (Ari / Assunta) ─────────────────────────────────────────
+function parsePipeline(table) {
+  const allRows = tableToRows(table);
+  // Find header row — look for row that has "Empresa" or "ID"
+  let headerIdx = -1;
+  let headerRow = null;
+  for (let i = 0; i < Math.min(allRows.length, 10); i++) {
+    const vals = Object.values(allRows[i]).map(v => String(v).trim());
+    if (vals.some(v => v === 'Empresa' || v === 'ID')) { headerIdx = i; break; }
+  }
 
-  function diasUteisRestantes() {
-    const hoje = new Date();
-    hoje.setHours(0,0,0,0);
-    const ultimoDia = new Date(hoje.getFullYear(), hoje.getMonth()+1, 0);
-    let count = 0;
-    for (let d = new Date(hoje); d <= ultimoDia; d.setDate(d.getDate()+1)) {
-      const dow = d.getDay();
-      if (dow === 0 || dow === 6) continue; // sábado/domingo
-      const iso = d.toISOString().slice(0,10);
-      if (FERIADOS.includes(iso)) continue;
-      if (d > hoje) count++; // não conta hoje
+  // Re-parse using raw table cols and row values
+  const cols = table.cols.map(c => (c.label||'').trim());
+  const dataRows = table.rows.slice(headerIdx >= 0 ? headerIdx + 1 : 4);
+
+  const idxOf = (names) => {
+    for (const n of names) {
+      const i = cols.findIndex(c => c.toLowerCase().includes(n.toLowerCase()));
+      if (i >= 0) return i;
     }
-    return count;
+    return -1;
+  };
+
+  const iEmpresa    = idxOf(['Empresa']);
+  const iTemp       = idxOf(['Tempera','Temp']);
+  const iProd       = idxOf(['Produto']);
+  const iSpec       = idxOf(['Especif']);
+  const iValor      = idxOf(['Valor Final','Valor']);
+  const iEtapa      = idxOf(['Etapa']);
+  const iData       = idxOf(['Data Proposta','Data 1']);
+  const iCatTop     = idxOf(['Categoria Top']);
+
+  const getCell = (row, idx) => {
+    if (idx < 0) return '';
+    const c = row.c && row.c[idx];
+    if (!c) return '';
+    if (c.v !== null && c.v !== undefined) return c.v;
+    return c.f || '';
+  };
+
+  const rows = [];
+  for (const row of dataRows) {
+    if (!row.c) continue;
+    const empresa = String(getCell(row, iEmpresa)||'').trim();
+    if (!empresa || empresa === 'Empresa') continue;
+    const temp    = String(getCell(row, iTemp)||'').trim();
+    const prod    = String(getCell(row, iProd)||'').trim();
+    const spec    = String(getCell(row, iSpec)||'').trim();
+    const etapa   = String(getCell(row, iEtapa)||'').trim();
+    const catTop  = String(getCell(row, iCatTop)||'').trim();
+    const rawVal  = getCell(row, iValor);
+    const valor   = typeof rawVal === 'number' ? rawVal : parseVal(rawVal);
+    const dataRaw = getCell(row, iData);
+
+    // Parse date — Google Sheets returns Date objects as "Date(yyyy,mm,dd)"
+    let dataDate = null;
+    if (dataRaw) {
+      if (typeof dataRaw === 'string' && dataRaw.startsWith('Date(')) {
+        const parts = dataRaw.replace('Date(','').replace(')','').split(',');
+        dataDate = new Date(+parts[0], +parts[1], +parts[2]);
+      } else if (dataRaw instanceof Date) {
+        dataDate = dataRaw;
+      } else if (typeof dataRaw === 'number') {
+        // Serial date
+        dataDate = new Date((dataRaw - 25569) * 86400000);
+      }
+    }
+
+    rows.push({ empresa, temp, prod, spec, etapa, catTop, valor, dataDate });
+  }
+  return rows;
+}
+
+// ─── SEMANAS DO MÊS ──────────────────────────────────────────────────────────
+function semanasDoMes(year, month) {
+  // Returns array of {label, start, end} for ~4 weeks
+  const weeks = [];
+  const nDays = new Date(year, month+1, 0).getDate();
+  const cuts = [1,8,15,22,nDays+1];
+  const mNames = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  for (let i = 0; i < 4; i++) {
+    const s = cuts[i], e = cuts[i+1]-1;
+    weeks.push({
+      label: `S${i+1} ${s.toString().padStart(2,'0')}–${e.toString().padStart(2,'0')}/${mNames[month]}`,
+      start: new Date(year, month, s),
+      end:   new Date(year, month, e, 23, 59, 59)
+    });
+  }
+  return weeks;
+}
+
+function calcSemanal(rows, etapaFechado, year, month) {
+  const semanas = semanasDoMes(year, month);
+  const vals = semanas.map(sem => {
+    return rows
+      .filter(r => {
+        if (!r.dataDate) return false;
+        const etapaOk = r.etapa && (r.etapa.toLowerCase().includes('fechad') || r.etapa.toLowerCase().includes('ganho') || r.etapa.toLowerCase().includes('contrato'));
+        if (!etapaOk) return false;
+        return r.dataDate >= sem.start && r.dataDate <= sem.end;
+      })
+      .reduce((s, r) => s + (r.valor||0), 0);
+  });
+  return { semanas, vals };
+}
+
+// ─── PARSE COMPARATIVO ───────────────────────────────────────────────────────
+function parseComparativo(table) {
+  // Read raw values by scanning rows
+  const rows = table.rows;
+  const cols = table.cols;
+
+  function getV(row, colIdx) {
+    if (!row || !row.c || !row.c[colIdx]) return null;
+    const c = row.c[colIdx];
+    return c.v !== null && c.v !== undefined ? c.v : (c.f ? parseVal(c.f) : null);
   }
 
-  function fmt(v) {
-    return 'R$ ' + Math.round(v).toLocaleString('pt-BR');
+  // Find the "META vs REALIZADO" section — scan for rows with vendor names
+  // We look for rows where col A/B = 'Ari' or 'Assunta'
+  let ariRow = null, assRow = null;
+  for (const row of rows) {
+    if (!row.c) continue;
+    const a = String(row.c[0]?.v || row.c[0]?.f || '').trim();
+    const b = String(row.c[1]?.v || row.c[1]?.f || '').trim();
+    const name = a || b;
+    if (name === 'Ari' && !ariRow) ariRow = row;
+    if (name === 'Assunta' && !assRow) assRow = row;
   }
 
-  const dias = diasUteisRestantes();
+  // From the screenshot: cols for meta section:
+  // Col B=Vendedor, C=Meta Mês, D=Realizado Mês, E=%Meta, F=Acumulado, G=Projeção Ano, H=Gap Meta Mês
+  const parseRow = (row) => {
+    if (!row || !row.c) return {};
+    const vals = row.c.map(c => c ? (c.v !== null && c.v !== undefined ? c.v : parseVal(c.f||'')) : 0);
+    // Find non-zero numeric values in order
+    const nums = vals.filter(v => typeof v === 'number' && v !== 0);
+    return {
+      metaMes:    vals[2] || vals[1] || nums[0] || 0,
+      realizado:  vals[3] || nums[1] || 0,
+      pctMeta:    vals[4] || 0,
+      acumulado:  vals[5] || nums[2] || 0,
+      projecao:   vals[6] || 0,
+      gapMeta:    vals[7] || 0,
+    };
+  };
 
-  // Ari
-  const metaAri    = 575000;
-  const realAri    = 108082;
-  const abertoAri  = 645432;
-  const faltaAri   = metaAri - realAri;
-  const pctAri     = abertoAri > 0 ? Math.round(faltaAri / abertoAri * 100) : 0;
-  const possivelAri = abertoAri >= faltaAri;
+  return {
+    ari: parseRow(ariRow),
+    ass: parseRow(assRow),
+  };
+}
 
-  document.getElementById('crTitleAri').textContent = `Conta rápida — ${dias} dia${dias!==1?'s':''} útil${dias!==1?'s':''} restante${dias!==1?'s':''}`;
-  document.getElementById('crFaltaAri').textContent = fmt(faltaAri);
-  document.getElementById('crPctAri').textContent   = pctAri + '%';
-  const stAri = document.getElementById('crStatusAri');
-  stAri.textContent  = possivelAri ? '✓ Possível' : '✗ Atenção';
-  stAri.style.color  = possivelAri ? '#7dc148' : '#e24b4a';
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+let prodChartInst = null, evolAriInst = null, evolAssInst = null;
 
-  // Assunta
-  const metaAss    = 200000;
-  const realAss    = 32924;
-  const abertoAss  = 415269;
-  const faltaAss   = metaAss - realAss;
-  const pctAss     = abertoAss > 0 ? Math.round(faltaAss / abertoAss * 100) : 0;
-  const possivelAss = abertoAss >= faltaAss;
+function renderVendedor(id, rows, comp, metaMes, nome, meses) {
+  const suffix = id; // 'Ari' or 'Ass'
+  const now = new Date();
+  const year = now.getFullYear(), month = now.getMonth();
 
-  document.getElementById('crTitleAss').textContent = `Conta rápida — ${dias} dia${dias!==1?'s':''} útil${dias!==1?'s':''} restante${dias!==1?'s':''}`;
-  document.getElementById('crFaltaAss').textContent = fmt(faltaAss);
-  document.getElementById('crPctAss').textContent   = pctAss + '%';
-  const stAss = document.getElementById('crStatusAss');
-  stAss.textContent  = possivelAss ? '✓ Possível' : '✗ Atenção';
-  stAss.style.color  = possivelAss ? '#7dc148' : '#e24b4a';
-})();
+  // KPIs do mês
+  const realMes    = comp.realizado || 0;
+  const pipeline   = comp.acumulado || rows.filter(r => r.etapa && !r.etapa.toLowerCase().includes('perdid') && !r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
+  const abertoVal  = rows.filter(r => r.etapa && !r.etapa.toLowerCase().includes('fechad') && !r.etapa.toLowerCase().includes('perdid') && !r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
+  const qtd        = rows.filter(r => r.etapa && !r.etapa.toLowerCase().includes('perdid') && !r.etapa.toLowerCase().includes('cancelad')).length;
+  const gapAcum    = comp.gapMeta || 0;
+  const pct        = metaMes > 0 ? (realMes / metaMes * 100) : 0;
+  const falta      = Math.max(metaMes - realMes, 0);
+  const dias       = diasUteisRestantes();
+  const pctAberto  = abertoVal > 0 ? Math.round(falta / abertoVal * 100) : 0;
+  const possivel   = abertoVal >= falta;
+
+  set(`meta${suffix}`, `Meta ${mesLabel()}: ${fmtR(metaMes)}`);
+  set(`pct${suffix}`,  pct.toFixed(1) + '%');
+  set(`real${suffix}`, fmtK(realMes));
+  set(`aberto${suffix}`, fmtK(abertoVal));
+  set(`qtd${suffix}`,  qtd);
+  set(`gap${suffix}`,  fmtK(Math.abs(gapAcum)));
+
+  // Conta rápida
+  set(`crTitle${suffix}`, `Conta rápida — ${dias} dia${dias!==1?'s':''} útil${dias!==1?'s':''} restante${dias!==1?'s':''}`);
+  set(`crFalta${suffix}`, fmtR(falta));
+  set(`crPct${suffix}`,   pctAberto + '%');
+  const stEl = document.getElementById(`crStatus${suffix}`);
+  if (stEl) { stEl.textContent = possivel ? '✓ Possível' : '✗ Atenção'; stEl.style.color = possivel ? '#7dc148' : '#e24b4a'; }
+
+  // Patrocínio Top of Mind
+  const topRows = rows.filter(r => r.catTop && r.catTop.toLowerCase().includes('top') && r.catTop.toLowerCase().includes('mind') || r.prod && r.prod.toLowerCase().includes('patrocínio'));
+  const patEl = document.getElementById(`pat${suffix}`);
+  if (patEl) {
+    if (topRows.length === 0) {
+      patEl.innerHTML = '<tr><td colspan="4" style="color:var(--text-muted);font-size:11px;padding:8px 6px;">Nenhuma proposta de patrocínio</td></tr>';
+    } else {
+      patEl.innerHTML = topRows.map(r => {
+        const temp = (r.temp||'').toLowerCase();
+        const badgeClass = temp.includes('quente') ? 'quente' : temp.includes('morno') ? 'morno' : 'frio';
+        const emoji = temp.includes('quente') ? '🔴' : temp.includes('morno') ? '🟡' : '🔵';
+        return `<tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+          <td style="font-weight:500;color:var(--text);">${r.empresa}</td>
+          <td style="color:var(--text-muted);font-size:11px;">${r.spec||'—'}</td>
+          <td style="text-align:right;font-weight:600;color:var(--cold);">${r.valor ? fmtR(r.valor) : '—'}</td>
+          <td style="text-align:center;"><span class="badge ${badgeClass}">${emoji} ${r.temp||'—'}</span></td>
+        </tr>`;
+      }).join('');
+    }
+  }
+
+  // Semanas
+  const { semanas, vals } = calcSemanal(rows, 'fechad', year, month);
+  const semEl = document.getElementById(`semLabels${suffix}`);
+  if (semEl) semEl.innerHTML = semanas.map(s=>`<span>${s.label}</span>`).join('');
+
+  const color = suffix === 'Ari' ? '#0eaae2' : '#7dc148';
+  const canvasId = `evol${suffix}`;
+  const existing = suffix === 'Ari' ? evolAriInst : evolAssInst;
+  if (existing) existing.destroy();
+  const chart = new Chart(document.getElementById(canvasId), {
+    type:'bar',
+    data:{labels:['S1','S2','S3','S4'],datasets:[{label:'Fechado',data:vals,backgroundColor:color+'bb',borderRadius:6,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c2333',borderColor:'rgba(14,170,226,0.3)',borderWidth:1,titleColor:'#e6edf3',bodyColor:'#8b949e',padding:10,callbacks:{label:i=>' '+fmtR(i.raw)}}},scales:{x:{ticks:{color:'#8b949e',font:{size:10}},grid:{display:false},border:{display:false}},y:{ticks:{color:'#8b949e',font:{size:10},callback:v=>'R$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}}}}
+  });
+  if (suffix === 'Ari') evolAriInst = chart; else evolAssInst = chart;
+
+  // Lista marcas quentes/mornas
+  const listEl = document.getElementById(`lista${suffix}`);
+  if (listEl) {
+    // Group by empresa, sum valores, get max temp
+    const grouped = {};
+    rows.forEach(r => {
+      const temp = (r.temp||'').toLowerCase();
+      if (!temp.includes('quente') && !temp.includes('morno')) return;
+      if (r.etapa && (r.etapa.toLowerCase().includes('perdid')||r.etapa.toLowerCase().includes('cancelad'))) return;
+      if (!grouped[r.empresa]) grouped[r.empresa] = { empresa:r.empresa, prods:[], valor:0, temp: r.temp };
+      grouped[r.empresa].valor += r.valor||0;
+      if (r.prod && !grouped[r.empresa].prods.includes(r.prod)) grouped[r.empresa].prods.push(r.prod);
+      // Quente > Morno
+      if (temp.includes('quente')) grouped[r.empresa].temp = r.temp;
+    });
+    const sorted = Object.values(grouped).sort((a,b) => {
+      const ta = (a.temp||'').toLowerCase().includes('quente') ? 1 : 0;
+      const tb = (b.temp||'').toLowerCase().includes('quente') ? 1 : 0;
+      if (ta !== tb) return tb - ta;
+      return b.valor - a.valor;
+    });
+    listEl.innerHTML = sorted.map(g => {
+      const cls = (g.temp||'').toLowerCase().includes('quente') ? 'quente' : 'morno';
+      return `<div class="aberto-row ${cls}"><div class="temp-dot ${cls}"></div><span class="pipe-empresa">${g.empresa}</span><span class="pipe-prod">${g.prods.join(' + ')||'—'}</span><span class="pipe-val">${g.valor ? fmtR(g.valor) : '—'}</span></div>`;
+    }).join('') || '<div style="color:var(--text-muted);font-size:12px;padding:8px;">Nenhuma proposta quente/morna encontrada</div>';
+  }
+}
+
+function renderComparativo(compData, rowsAri, rowsAss) {
+  const render = (elId, barId, comp, rows, color) => {
+    const meta    = comp.metaMes || 0;
+    const real    = comp.realizado || 0;
+    const pct     = meta > 0 ? (real/meta*100) : 0;
+    const acum    = comp.acumulado || 0;
+    const gap     = comp.gapMeta || 0;
+    const aberto  = rows.filter(r=>r.etapa&&!r.etapa.toLowerCase().includes('fechad')&&!r.etapa.toLowerCase().includes('perdid')&&!r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
+    const quentes = rows.filter(r=>(r.temp||'').toLowerCase().includes('quente')).length;
+    const mornos  = rows.filter(r=>(r.temp||'').toLowerCase().includes('morno')).length;
+
+    const rows2 = [
+      ['Meta Mês', fmtR(meta), ''],
+      ['Realizado Mês', fmtR(real), 'green'],
+      ['% da meta', pct.toFixed(1)+'%', 'amber'],
+      ['Em aberto', fmtK(aberto), 'blue'],
+      ['Gap acumulado', '− '+fmtK(Math.abs(gap)), 'red'],
+      ['Marcas quentes', quentes, ''],
+      ['Marcas mornas', mornos, ''],
+    ];
+    const el = document.getElementById(elId);
+    if (el) el.innerHTML = rows2.map(([l,v,c])=>`<div class="comp-row"><span class="comp-row-label">${l}</span><span class="comp-row-val ${c}">${v}</span></div>`).join('');
+    const bar = document.getElementById(barId);
+    if (bar) bar.style.width = Math.min(pct,100)+'%';
+  };
+  render('compAri','compBarAri', compData.ari, rowsAri, '#0eaae2');
+  render('compAss','compBarAss', compData.ass, rowsAss, '#7dc148');
+}
+
+function renderProdutos(rowsAri, rowsAss) {
+  // Group by produto, count e somar valores
+  const PRODUTOS = ['Top of Mind Patrocínio','Eu Quero Essa Estrela','Impressos - Os Eleitos','Impressos - Os Vencedores','RH Top Sync','RH Pra Você','EncontRHo','Merchan','Branded Content / Outros'];
+
+  const group = (rows) => {
+    const g = {};
+    rows.forEach(r => {
+      if (!r.prod) return;
+      let key = PRODUTOS.find(p => r.prod.toLowerCase().includes(p.toLowerCase().split(' ').slice(0,3).join(' ').toLowerCase()));
+      if (!key) key = r.prod;
+      if (!g[key]) g[key] = {qtd:0, val:0};
+      g[key].qtd++; g[key].val += r.valor||0;
+    });
+    return g;
+  };
+  const gAri = group(rowsAri);
+  const gAss = group(rowsAss);
+
+  const allProds = [...new Set([...Object.keys(gAri), ...Object.keys(gAss)])];
+
+  // Chart
+  const labels = allProds.slice(0,8);
+  const dataAri = labels.map(p => (gAri[p]||{qtd:0}).qtd);
+  const dataAss = labels.map(p => (gAss[p]||{qtd:0}).qtd);
+  const totals  = labels.map((p,i) => dataAri[i]+dataAss[i]);
+
+  if (prodChartInst) prodChartInst.destroy();
+  prodChartInst = new Chart(document.getElementById('prodChart'), {
+    type:'bar',
+    data:{labels,datasets:[
+      {label:'Ari',    data:dataAri, backgroundColor:'#0eaae2',borderRadius:4,borderSkipped:false},
+      {label:'Assunta',data:dataAss, backgroundColor:'#7dc148',borderRadius:4,borderSkipped:false}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c2333',borderColor:'rgba(14,170,226,0.3)',borderWidth:1,titleColor:'#e6edf3',bodyColor:'#8b949e',padding:12,callbacks:{title:i=>i[0].label,beforeBody:i=>'Total: '+totals[i[0].dataIndex]+' propostas',label:i=>' '+i.dataset.label+': '+i.raw+' ('+Math.round(i.raw/totals[i.dataIndex]*100)+'%)'}}},scales:{x:{ticks:{color:'#8b949e',font:{size:11},maxRotation:30,autoSkip:false},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.08)'}},y:{ticks:{color:'#8b949e',stepSize:5,font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.08)'}}}}
+  });
+
+  // Tabela
+  const tbody = document.getElementById('prodValTable');
+  if (tbody) {
+    const allP = [...new Set([...PRODUTOS, ...allProds])];
+    let html = '';
+    let totalAri=0, totalAss=0;
+    allP.forEach((p,i) => {
+      const vA = (gAri[p]||{val:0}).val;
+      const vB = (gAss[p]||{val:0}).val;
+      const vT = vA + vB;
+      totalAri+=vA; totalAss+=vB;
+      if (!vA && !vB) return;
+      const bg = i%2===0?'':'background:var(--bg-card2);';
+      html += `<tr style="${bg}border-bottom:1px solid rgba(255,255,255,0.05);">
+        <td style="padding:10px 14px;color:var(--text);font-weight:500;">${p}</td>
+        <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600;">${vA?fmtR(vA):'—'}</td>
+        <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600;">${vB?fmtR(vB):'—'}</td>
+        <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700;">${vT?fmtR(vT):'—'}</td>
+      </tr>`;
+    });
+    html += `<tr style="background:rgba(14,170,226,0.08);border-top:2px solid rgba(14,170,226,0.3);">
+      <td style="padding:12px 14px;color:var(--text);font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;">TOTAL</td>
+      <td style="padding:12px 14px;text-align:right;color:#0eaae2;font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;">${fmtR(totalAri)}</td>
+      <td style="padding:12px 14px;text-align:right;color:#7dc148;font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;">${fmtR(totalAss)}</td>
+      <td style="padding:12px 14px;text-align:right;color:var(--text);font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;">${fmtR(totalAri+totalAss)}</td>
+    </tr>`;
+    tbody.innerHTML = html;
+  }
+}
+
+function mesLabel() {
+  return new Date().toLocaleString('pt-BR',{month:'long'}).replace(/^\w/,c=>c.toUpperCase());
+}
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+// ─── MAIN ─────────────────────────────────────────────────────────────────────
+async function init() {
+  try {
+    // Fetch all sheets in parallel
+    const [tableAri, tableAss, tableComp] = await Promise.all([
+      fetchSheet(SHEET_NAMES.ari),
+      fetchSheet(SHEET_NAMES.ass),
+      fetchSheet(SHEET_NAMES.comp),
+    ]);
+
+    const rowsAri  = parsePipeline(tableAri);
+    const rowsAss  = parsePipeline(tableAss);
+    const compData = parseComparativo(tableComp);
+
+    // Header
+    const now = new Date();
+    const label = now.toLocaleString('pt-BR',{month:'long',year:'numeric'}).replace(/^\w/,c=>c.toUpperCase());
+    set('headerDate', label);
+    set('visaoTitle', `Visão geral — ${label}`);
+
+    // Metas (da planilha Comparativo ou fallback)
+    const metaAri = compData.ari.metaMes || 575000;
+    const metaAss = compData.ass.metaMes || 200000;
+    const metaTotal = metaAri + metaAss;
+    const realTotal = (compData.ari.realizado||0) + (compData.ass.realizado||0);
+    const abertoAri = rowsAri.filter(r=>r.etapa&&!r.etapa.toLowerCase().includes('fechad')&&!r.etapa.toLowerCase().includes('perdid')&&!r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
+    const abertoAss = rowsAss.filter(r=>r.etapa&&!r.etapa.toLowerCase().includes('fechad')&&!r.etapa.toLowerCase().includes('perdid')&&!r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
+    const abertoTotal = abertoAri + abertoAss;
+    const pctTotal = metaTotal > 0 ? (realTotal/metaTotal*100) : 0;
+    const aquentesAri = rowsAri.filter(r=>(r.temp||'').toLowerCase().includes('quente')||(r.temp||'').toLowerCase().includes('morno')).length;
+    const aquentesAss = rowsAss.filter(r=>(r.temp||'').toLowerCase().includes('quente')||(r.temp||'').toLowerCase().includes('morno')).length;
+
+    // Visão geral KPIs
+    set('kpiMeta',  fmtK(metaTotal));
+    set('kpiMetaSub', `Ari ${fmtK(metaAri)} · Assunta ${fmtK(metaAss)}`);
+    set('kpiReal',  fmtK(realTotal));
+    set('kpiRealSub', `${pctTotal.toFixed(1)}% da meta total`);
+    const barEl = document.getElementById('kpiRealBar');
+    if (barEl) barEl.style.width = Math.min(pctTotal,100)+'%';
+    set('kpiAberto',    fmtK(abertoTotal));
+    set('kpiAquecidas', aquentesAri + aquentesAss);
+    set('kpiAquecSub',  `Ari ${aquentesAri} · Assunta ${aquentesAss}`);
+
+    // Vendedores
+    renderVendedor('Ari', rowsAri, compData.ari, metaAri, 'Ari');
+    renderVendedor('Ass', rowsAss, compData.ass, metaAss, 'Assunta');
+
+    // Comparativo
+    renderComparativo(compData, rowsAri, rowsAss);
+
+    // Produtos
+    renderProdutos(rowsAri, rowsAss);
+
+    // Show
+    document.getElementById('loadingOverlay').style.display = 'none';
+    document.getElementById('mainContent').style.display = '';
+    document.getElementById('footerEl').style.display = '';
+
+  } catch(e) {
+    console.error(e);
+    document.getElementById('loadingOverlay').innerHTML = `
+      <div class="error-box">
+        <div style="font-size:24px;margin-bottom:8px;">⚠️</div>
+        <div style="font-weight:700;margin-bottom:4px;">Erro ao carregar dados</div>
+        <div style="font-size:11px;opacity:0.8;">${e.message}</div>
+        <div style="margin-top:12px;font-size:11px;">Verifique se a planilha está pública e tente novamente.</div>
+        <button onclick="location.reload()" style="margin-top:16px;padding:8px 20px;background:#0eaae2;color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:600;">Tentar novamente</button>
+      </div>`;
+  }
+}
+
+init();
 </script>
 </body>
 </html>
