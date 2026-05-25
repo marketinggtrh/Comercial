@@ -437,13 +437,14 @@ function parseComparativo(table) {
       }
       if (typeof v === 'number' && !isNaN(v) && Math.abs(v) > 100) nums.push(v);
     }
-    // nums[0]=Meta, nums[1]=Realizado, nums[2]=Acumulado, nums[3]=Projeção, nums[4]=Gap
+    // nums[0]=Meta, nums[1]=Realizado, nums[2]=Acumulado(-), nums[3]=ProjeçãoAno, nums[4]=GapMetaMês
     const meta      = nums[0] || 0;
     const realizado = nums[1] || 0;
-    const gap       = nums[4] || nums[3] || 0;
+    const acumulado = nums[2] || 0; // pipeline total em aberto acumulado
+    const gap       = nums[4] || nums[3] || 0; // gap meta mês
 
-    if (nome === 'Ari')     result.ari = {meta, realizado, gap};
-    if (nome === 'Assunta') result.ass = {meta, realizado, gap};
+    if (nome === 'Ari')     result.ari = {meta, realizado, acumulado, gap};
+    if (nome === 'Assunta') result.ass = {meta, realizado, acumulado, gap};
   }
   return result;
 }
@@ -503,19 +504,16 @@ let charts = {};
 
 function renderVendedor(id, data, kpis) {
   const { items } = data;
-  const { meta, realizado, gap } = kpis;
+  const { meta, realizado, pipeline, gap } = kpis;
   const now = new Date();
   const year = now.getFullYear(), month = now.getMonth();
 
-  // Filtra itens ativos (não perdidos/cancelados)
   const ativos = items.filter(r => {
     const e = r.etapa.toLowerCase();
     return !e.includes('perdid') && !e.includes('cancelad');
   });
 
-  // Em aberto = ativos não fechados
-  const emAberto = ativos.filter(r => !r.etapa.toLowerCase().includes('fechad'));
-  const abertoVal = emAberto.reduce((s,r)=>s+(r.valor||0),0);
+  const abertoVal = pipeline || 0; // vem direto do Comparativo
   const qtd = ativos.length;
 
   // Gap acumulado = meta acumulada até hoje - realizado acumulado
@@ -725,12 +723,14 @@ async function init() {
     const dAss  = parsePipeline(tableAss);
     const comp  = parseComparativo(tableComp);
 
-    // Injeta meta/realizado vindos do Comparativo nos dados
+    // Injeta meta/realizado/pipeline vindos do Comparativo nos dados
     dAri.meta      = comp.ari.meta;
     dAri.realizado = comp.ari.realizado;
+    dAri.pipeline  = comp.ari.acumulado;  // pipeline total em aberto
     dAri.gap       = comp.ari.gap;
     dAss.meta      = comp.ass.meta;
     dAss.realizado = comp.ass.realizado;
+    dAss.pipeline  = comp.ass.acumulado;  // pipeline total em aberto
     dAss.gap       = comp.ass.gap;
 
     // Header
@@ -743,9 +743,7 @@ async function init() {
     const realTotal  = dAri.realizado + dAss.realizado;
     const pctTotal   = metaTotal > 0 ? (realTotal/metaTotal*100) : 0;
 
-    const abertoAri = dAri.items.filter(r=>!r.etapa.toLowerCase().includes('fechad')&&!r.etapa.toLowerCase().includes('perdid')&&!r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
-    const abertoAss = dAss.items.filter(r=>!r.etapa.toLowerCase().includes('fechad')&&!r.etapa.toLowerCase().includes('perdid')&&!r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
-    const abertoTotal = abertoAri + abertoAss;
+    const abertoTotal = (dAri.pipeline||0) + (dAss.pipeline||0);
 
     const aqAri = dAri.items.filter(r=>r.tempLower.includes('quente')||r.tempLower.includes('morno')).length;
     const aqAss = dAss.items.filter(r=>r.tempLower.includes('quente')||r.tempLower.includes('morno')).length;
@@ -759,8 +757,8 @@ async function init() {
     set('kpiAquecidas',  aqAri + aqAss);
     set('kpiAquecSub',   `Ari ${aqAri} · Assunta ${aqAss}`);
 
-    renderVendedor('Ari', dAri, {meta:dAri.meta, realizado:dAri.realizado, gap:dAri.gap});
-    renderVendedor('Ass', dAss, {meta:dAss.meta, realizado:dAss.realizado, gap:dAss.gap});
+    renderVendedor('Ari', dAri, {meta:dAri.meta, realizado:dAri.realizado, pipeline:dAri.pipeline, gap:dAri.gap});
+    renderVendedor('Ass', dAss, {meta:dAss.meta, realizado:dAss.realizado, pipeline:dAss.pipeline, gap:dAss.gap});
     renderComparativo(dAri, dAss);
     renderProdutos(dAri, dAss);
 
