@@ -11,13 +11,13 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --blue:#0c63a9;--blue-light:#0eaae2;--teal:#00ada5;--green:#7dc148;
-  --gray:#464749;--bg:#0d1117;--bg-card:#161b22;--bg-card2:#1c2333;
+  --bg:#0d1117;--bg-card:#161b22;--bg-card2:#1c2333;
   --border:rgba(14,170,226,0.15);--text:#e6edf3;--text-muted:#8b949e;
   --red:#e24b4a;--amber:#e6b222;--cold:#74aae2;
 }
 body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
 .header{background:var(--bg-card);border-bottom:1px solid var(--border);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100;}
-.logo{font-family:'Montserrat',sans-serif;font-weight:800;font-size:18px;letter-spacing:-0.5px;color:var(--text);}
+.logo{font-family:'Montserrat',sans-serif;font-weight:800;font-size:18px;color:var(--text);}
 .logo span{color:var(--blue-light);}
 .header-badge{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--blue-light);background:rgba(14,170,226,0.1);border:1px solid rgba(14,170,226,0.3);padding:4px 12px;border-radius:20px;}
 .header-date{font-size:12px;color:var(--text-muted);}
@@ -89,19 +89,18 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
 .comp-row-val.green{color:var(--green);}
 .comp-row-val.amber{color:var(--amber);}
 .comp-row-val.blue{color:var(--blue-light);}
-.comp-row-val.cold{color:var(--cold);}
 .comp-row-val.red{color:var(--red);}
 .comp-progress{height:4px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:14px;overflow:hidden;}
 .comp-progress-fill{height:100%;border-radius:2px;}
 .chart-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:2rem;}
-.footer{text-align:center;padding:2rem;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);}
 .pat-table{width:100%;border-collapse:collapse;font-size:12px;}
 .pat-table th{text-align:left;padding:4px 6px;color:var(--text-muted);font-weight:600;font-size:10px;border-bottom:1px solid rgba(255,255,255,0.08);}
-.pat-table td{padding:6px;font-size:12px;}
+.pat-table td{padding:6px;}
 .badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;}
 .badge.quente{background:rgba(226,75,74,0.15);color:#f87171;}
 .badge.morno{background:rgba(230,178,34,0.15);color:#fbbf24;}
 .badge.frio{background:rgba(116,170,226,0.15);color:var(--cold);}
+.footer{text-align:center;padding:2rem;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);}
 ::-webkit-scrollbar{width:6px;}
 ::-webkit-scrollbar-track{background:var(--bg);}
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
@@ -109,7 +108,6 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
 </head>
 <body>
 
-<!-- Loading -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-spinner"></div>
   <div class="loading-text">Carregando dados da planilha...</div>
@@ -123,9 +121,8 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
 
 <main class="container" id="mainContent" style="display:none;">
 
-  <!-- VISÃO GERAL -->
   <div class="visao-geral">
-    <div class="visao-geral-title" id="visaoTitle">Visão geral — carregando...</div>
+    <div class="visao-geral-title" id="visaoTitle">Visão geral</div>
     <div class="kpi-grid">
       <div class="kpi-card">
         <div class="kpi-label">Meta total do mês</div>
@@ -136,7 +133,7 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
         <div class="kpi-label">Realizado Mês</div>
         <div class="kpi-value amber" id="kpiReal">—</div>
         <div class="kpi-sub" id="kpiRealSub">—</div>
-        <div class="kpi-bar"><div class="kpi-bar-fill" id="kpiRealBar" style="width:0%;"></div></div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" id="kpiRealBar" style="width:0%"></div></div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">Em aberto</div>
@@ -159,7 +156,7 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
       <div class="avatar">AR</div>
       <div class="vendedor-info">
         <div class="vendedor-name">Ari</div>
-        <div class="vendedor-meta" id="metaAri">Meta: —</div>
+        <div class="vendedor-meta" id="metaAri">—</div>
       </div>
       <div class="vendedor-pct" id="pctAri">—<span>da meta</span></div>
     </div>
@@ -169,22 +166,20 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
           <div class="mini-stat"><div class="mini-stat-val green" id="realAri">—</div><div class="mini-stat-label">Realizado</div></div>
           <div class="mini-stat"><div class="mini-stat-val blue" id="abertoAri">—</div><div class="mini-stat-label">Em aberto</div></div>
           <div class="mini-stat"><div class="mini-stat-val" id="qtdAri">—</div><div class="mini-stat-label">Propostas</div></div>
-          <div class="mini-stat"><div class="mini-stat-val" style="color:#e24b4a;" id="gapAri">—</div><div class="mini-stat-label">Gap acumulado</div></div>
+          <div class="mini-stat"><div class="mini-stat-val" style="color:#e24b4a" id="gapAri">—</div><div class="mini-stat-label">Gap acumulado</div></div>
         </div>
         <div class="conta-rapida">
           <div class="conta-rapida-title" id="crTitleAri">Conta rápida — calculando...</div>
           <div class="conta-rapida-grid">
-            <div class="cr-item"><div class="cr-val" style="color:#e24b4a;" id="crFaltaAri">—</div><div class="cr-label">Falta para a meta</div></div>
-            <div class="cr-item"><div class="cr-val" style="color:#e6b222;" id="crPctAri">—</div><div class="cr-label">do em aberto precisa fechar</div></div>
+            <div class="cr-item"><div class="cr-val" style="color:#e24b4a" id="crFaltaAri">—</div><div class="cr-label">Falta para a meta</div></div>
+            <div class="cr-item"><div class="cr-val" style="color:#e6b222" id="crPctAri">—</div><div class="cr-label">do em aberto precisa fechar</div></div>
             <div class="cr-item"><div class="cr-val" id="crStatusAri">—</div><div class="cr-label">em aberto cobre a meta</div></div>
           </div>
         </div>
         <div style="background:var(--bg-card2);border:1px solid rgba(116,170,226,0.2);border-radius:10px;padding:1rem;margin-bottom:1rem;">
           <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cold);margin-bottom:10px;">⭐ Patrocínio Top of Mind</div>
-          <table class="pat-table">
-            <thead><tr><th>Marca</th><th>Cota</th><th style="text-align:right;">Valor</th><th style="text-align:center;">Status</th></tr></thead>
-            <tbody id="patAri"></tbody>
-          </table>
+          <table class="pat-table"><thead><tr><th>Marca</th><th>Especificação</th><th style="text-align:right">Valor</th><th style="text-align:center">Status</th></tr></thead>
+          <tbody id="patAri"></tbody></table>
         </div>
         <div class="sub-title">Fechados no mês — por semana</div>
         <div style="position:relative;height:130px;margin-bottom:4px;"><canvas id="evolAri"></canvas></div>
@@ -203,7 +198,7 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
       <div class="avatar">AS</div>
       <div class="vendedor-info">
         <div class="vendedor-name">Assunta</div>
-        <div class="vendedor-meta" id="metaAss">Meta: —</div>
+        <div class="vendedor-meta" id="metaAss">—</div>
       </div>
       <div class="vendedor-pct" id="pctAss">—<span>da meta</span></div>
     </div>
@@ -213,22 +208,20 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
           <div class="mini-stat"><div class="mini-stat-val green" id="realAss">—</div><div class="mini-stat-label">Realizado</div></div>
           <div class="mini-stat"><div class="mini-stat-val blue" id="abertoAss">—</div><div class="mini-stat-label">Em aberto</div></div>
           <div class="mini-stat"><div class="mini-stat-val" id="qtdAss">—</div><div class="mini-stat-label">Propostas</div></div>
-          <div class="mini-stat"><div class="mini-stat-val" style="color:#e24b4a;" id="gapAss">—</div><div class="mini-stat-label">Gap acumulado</div></div>
+          <div class="mini-stat"><div class="mini-stat-val" style="color:#e24b4a" id="gapAss">—</div><div class="mini-stat-label">Gap acumulado</div></div>
         </div>
         <div class="conta-rapida green">
           <div class="conta-rapida-title" id="crTitleAss">Conta rápida — calculando...</div>
           <div class="conta-rapida-grid">
-            <div class="cr-item"><div class="cr-val" style="color:#e24b4a;" id="crFaltaAss">—</div><div class="cr-label">Falta para a meta</div></div>
-            <div class="cr-item"><div class="cr-val" style="color:#e6b222;" id="crPctAss">—</div><div class="cr-label">do em aberto precisa fechar</div></div>
+            <div class="cr-item"><div class="cr-val" style="color:#e24b4a" id="crFaltaAss">—</div><div class="cr-label">Falta para a meta</div></div>
+            <div class="cr-item"><div class="cr-val" style="color:#e6b222" id="crPctAss">—</div><div class="cr-label">do em aberto precisa fechar</div></div>
             <div class="cr-item"><div class="cr-val" id="crStatusAss">—</div><div class="cr-label">em aberto cobre a meta</div></div>
           </div>
         </div>
         <div style="background:var(--bg-card2);border:1px solid rgba(116,170,226,0.2);border-radius:10px;padding:1rem;margin-bottom:1rem;">
           <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--cold);margin-bottom:10px;">⭐ Patrocínio Top of Mind</div>
-          <table class="pat-table">
-            <thead><tr><th>Marca</th><th>Cota</th><th style="text-align:right;">Valor</th><th style="text-align:center;">Status</th></tr></thead>
-            <tbody id="patAss"></tbody>
-          </table>
+          <table class="pat-table"><thead><tr><th>Marca</th><th>Especificação</th><th style="text-align:right">Valor</th><th style="text-align:center">Status</th></tr></thead>
+          <tbody id="patAss"></tbody></table>
         </div>
         <div class="sub-title">Fechados no mês — por semana</div>
         <div style="position:relative;height:130px;margin-bottom:4px;"><canvas id="evolAss"></canvas></div>
@@ -245,14 +238,14 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
   <div class="section-label">Comparativo Ari vs Assunta</div>
   <div class="comp-grid">
     <div class="comp-card">
-      <div class="comp-name"><div class="comp-name-dot" style="background:#0eaae2;"></div>Ari</div>
+      <div class="comp-name"><div class="comp-name-dot" style="background:#0eaae2"></div>Ari</div>
       <div id="compAri"></div>
-      <div class="comp-progress"><div class="comp-progress-fill" id="compBarAri" style="background:linear-gradient(90deg,#0c63a9,#0eaae2);"></div></div>
+      <div class="comp-progress"><div class="comp-progress-fill" id="compBarAri" style="background:linear-gradient(90deg,#0c63a9,#0eaae2)"></div></div>
     </div>
     <div class="comp-card">
-      <div class="comp-name"><div class="comp-name-dot" style="background:#7dc148;"></div>Assunta</div>
+      <div class="comp-name"><div class="comp-name-dot" style="background:#7dc148"></div>Assunta</div>
       <div id="compAss"></div>
-      <div class="comp-progress"><div class="comp-progress-fill" id="compBarAss" style="background:linear-gradient(90deg,#00ada5,#7dc148);"></div></div>
+      <div class="comp-progress"><div class="comp-progress-fill" id="compBarAss" style="background:linear-gradient(90deg,#00ada5,#7dc148)"></div></div>
     </div>
   </div>
 
@@ -260,7 +253,7 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
   <div class="section-label">Propostas por produto</div>
   <div class="chart-card">
     <div style="position:relative;height:220px;"><canvas id="prodChart"></canvas></div>
-    <div style="display:flex;align-items:center;gap:16px;margin-top:12px;font-size:11px;color:var(--text-muted);">
+    <div style="display:flex;gap:16px;margin-top:12px;font-size:11px;color:var(--text-muted);">
       <span><span style="display:inline-block;width:10px;height:10px;background:#0eaae2;border-radius:2px;margin-right:4px;"></span>Ari</span>
       <span><span style="display:inline-block;width:10px;height:10px;background:#7dc148;border-radius:2px;margin-right:4px;"></span>Assunta</span>
     </div>
@@ -272,10 +265,10 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
     <table style="width:100%;border-collapse:collapse;font-size:13px;">
       <thead>
         <tr>
-          <th style="text-align:left;padding:10px 14px;background:var(--bg-card2);color:var(--text-muted);font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border);">Produto</th>
-          <th style="text-align:right;padding:10px 14px;background:var(--bg-card2);color:#0eaae2;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border);">Ari (R$)</th>
-          <th style="text-align:right;padding:10px 14px;background:var(--bg-card2);color:#7dc148;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border);">Assunta (R$)</th>
-          <th style="text-align:right;padding:10px 14px;background:var(--bg-card2);color:var(--text-muted);font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border-bottom:1px solid var(--border);">Total (R$)</th>
+          <th style="text-align:left;padding:10px 14px;background:var(--bg-card2);color:var(--text-muted);font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border);">Produto</th>
+          <th style="text-align:right;padding:10px 14px;background:var(--bg-card2);color:#0eaae2;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border);">Ari (R$)</th>
+          <th style="text-align:right;padding:10px 14px;background:var(--bg-card2);color:#7dc148;font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border);">Assunta (R$)</th>
+          <th style="text-align:right;padding:10px 14px;background:var(--bg-card2);color:var(--text-muted);font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--border);">Total (R$)</th>
         </tr>
       </thead>
       <tbody id="prodValTable"></tbody>
@@ -283,26 +276,54 @@ body{font-family:'Roboto',sans-serif;background:var(--bg);color:var(--text);min-
   </div>
 
 </main>
-
-<footer class="footer" id="footerEl" style="display:none;">Grupo TopRH · Dashboard Comercial · Dados carregados da planilha Pipeline_Comercial_2026</footer>
+<footer class="footer" id="footerEl" style="display:none;">Grupo TopRH · Dashboard Comercial · Atualizado automaticamente via Google Sheets</footer>
 
 <script>
-// ─── CONFIG ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// CONFIGURAÇÃO
+// ══════════════════════════════════════════════════════════════════
 const SHEET_ID = '1hcv2OLkQM89VQ_jLv1DuTD_rQcpHG9FOq-iW0Zm3lec';
-const SHEET_NAMES = { ari: 'Ari', ass: 'Assunta', comp: 'Comparativo' };
 
-// Feriados SP 2026
+// Estrutura da aba Ari/Assunta (linha 4 = cabeçalho, índice base 0)
+// Colunas conforme screenshot:
+// A=ID, B=Empresa, C=Contato, D=TipoCliente, E=CatTopMind, F=OrigemLead,
+// G=Data1Contato, H=Etapa, I=DataPropostaEnviada, J=Temperatura,
+// K=Produto, L=Especificacao, M=Pacote, N=PrecoTabela, O=Desconto,
+// P=ValorFinal, Q=MesPrevisto, R=MotivoPerda, S=Observacao
+const COL = {
+  ID:       0,  // A
+  EMPRESA:  1,  // B
+  ETAPA:    7,  // H
+  DATA_PROP:8,  // I
+  TEMP:     9,  // J
+  PRODUTO:  10, // K
+  SPEC:     11, // L
+  CAT_TOP:  4,  // E
+  VALOR:    15, // P
+};
+
+// Linha 3 (índice 2) = valores de Meta/Realizado/Pipeline
+// Linha 4 (índice 3) = cabeçalho das colunas
+// Linha 5+ (índice 4+) = dados
+const HEADER_ROW = 3;  // índice da linha de cabeçalho
+const DATA_START = 4;  // índice onde começam os dados
+
+// Meta está na linha 3 (índice 2):
+// Col C (2) = Meta, Col E/F (4-5) = Realizado, Col R/S (17-18) = Pipeline aberto
+const META_ROW = 2;
+
 const FERIADOS = [
   '2026-01-01','2026-01-25','2026-02-16','2026-02-17','2026-02-18',
   '2026-04-03','2026-04-21','2026-05-01','2026-06-04','2026-07-09',
   '2026-09-07','2026-10-12','2026-11-02','2026-11-15','2026-11-20','2026-12-25'
 ];
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
-function fmtR(v, decimals=0) {
-  if (!v && v !== 0) return '—';
-  const n = Math.round(v * Math.pow(10,decimals)) / Math.pow(10,decimals);
-  return 'R$ ' + n.toLocaleString('pt-BR', {minimumFractionDigits:decimals, maximumFractionDigits:decimals});
+// ══════════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════════
+function fmtR(v) {
+  if (v === null || v === undefined || v === '') return '—';
+  return 'R$ ' + Math.round(v).toLocaleString('pt-BR');
 }
 function fmtK(v) {
   if (!v && v !== 0) return '—';
@@ -310,17 +331,44 @@ function fmtK(v) {
   if (Math.abs(v) >= 1000) return 'R$ ' + Math.round(v/1000) + 'K';
   return fmtR(v);
 }
-function parseVal(s) {
+function parseNum(s) {
+  if (typeof s === 'number') return s;
   if (!s) return 0;
-  const clean = String(s).replace(/R\$\s*/g,'').replace(/\./g,'').replace(',','.').trim();
-  return parseFloat(clean) || 0;
+  return parseFloat(String(s).replace(/R\$\s*/g,'').replace(/\./g,'').replace(',','.').trim()) || 0;
+}
+function getCell(row, colIdx) {
+  if (!row || !row.c || colIdx < 0 || colIdx >= row.c.length) return null;
+  const c = row.c[colIdx];
+  if (!c) return null;
+  if (c.v !== null && c.v !== undefined) return c.v;
+  if (c.f) return c.f;
+  return null;
+}
+function getCellStr(row, colIdx) {
+  const v = getCell(row, colIdx);
+  return v !== null ? String(v).trim() : '';
+}
+function getCellNum(row, colIdx) {
+  const v = getCell(row, colIdx);
+  if (typeof v === 'number') return v;
+  return parseNum(v);
+}
+function parseDate(row, colIdx) {
+  const v = getCell(row, colIdx);
+  if (!v) return null;
+  if (typeof v === 'string' && v.startsWith('Date(')) {
+    const p = v.replace('Date(','').replace(')','').split(',');
+    return new Date(+p[0], +p[1], +p[2]);
+  }
+  if (v instanceof Date) return v;
+  if (typeof v === 'number') return new Date((v - 25569) * 86400000);
+  return null;
 }
 function diasUteisRestantes() {
   const hoje = new Date(); hoje.setHours(0,0,0,0);
   const ultimo = new Date(hoje.getFullYear(), hoje.getMonth()+1, 0);
   let c = 0;
-  for (let d = new Date(hoje); d <= ultimo; d.setDate(d.getDate()+1)) {
-    if (d <= hoje) continue;
+  for (let d = new Date(hoje.getTime()+86400000); d <= ultimo; d.setDate(d.getDate()+1)) {
     const dow = d.getDay();
     if (dow===0||dow===6) continue;
     if (FERIADOS.includes(d.toISOString().slice(0,10))) continue;
@@ -328,443 +376,352 @@ function diasUteisRestantes() {
   }
   return c;
 }
-function mesAtual() {
-  return new Date().toLocaleString('pt-BR',{month:'long',year:'numeric'});
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+function mesLabel() {
+  return new Date().toLocaleString('pt-BR',{month:'long',year:'numeric'})
+    .replace(/^\w/,c=>c.toUpperCase());
 }
 
-// ─── FETCH SHEETS ─────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// FETCH
+// ══════════════════════════════════════════════════════════════════
 async function fetchSheet(sheetName) {
-  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}`;
+  const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&headers=0`;
   const r = await fetch(url);
   const text = await r.text();
-  const json = JSON.parse(text.replace(/^[^(]+\(/, '').replace(/\);?\s*$/, ''));
+  // Remove callback wrapper: google.visualization.Query.setResponse({...});
+  const clean = text.replace(/^[^(]+\(/, '').replace(/\);\s*$/, '');
+  const json = JSON.parse(clean);
   return json.table;
 }
 
-function tableToRows(table) {
-  // returns array of objects keyed by column label (row 0 = headers)
-  if (!table || !table.rows || table.rows.length < 2) return [];
-  const cols = table.cols.map(c => c.label || '');
-  return table.rows.map(row => {
-    const obj = {};
-    cols.forEach((col, i) => {
-      const cell = row.c && row.c[i];
-      obj[col] = cell ? (cell.v !== null && cell.v !== undefined ? cell.v : (cell.f || '')) : '';
-    });
-    return obj;
-  });
-}
-
-// ─── PARSE PIPELINE (Ari / Assunta) ─────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// PARSE PIPELINE
+// ══════════════════════════════════════════════════════════════════
 function parsePipeline(table) {
-  const allRows = tableToRows(table);
-  // Find header row — look for row that has "Empresa" or "ID"
-  let headerIdx = -1;
-  let headerRow = null;
-  for (let i = 0; i < Math.min(allRows.length, 10); i++) {
-    const vals = Object.values(allRows[i]).map(v => String(v).trim());
-    if (vals.some(v => v === 'Empresa' || v === 'ID')) { headerIdx = i; break; }
-  }
+  const rows = table.rows;
+  if (!rows || rows.length < 4) return { meta:0, realizado:0, pipeline:0, items:[] };
 
-  // Re-parse using raw table cols and row values
-  const cols = table.cols.map(c => (c.label||'').trim());
-  const dataRows = table.rows.slice(headerIdx >= 0 ? headerIdx + 1 : 4);
-
-  const idxOf = (names) => {
-    for (const n of names) {
-      const i = cols.findIndex(c => c.toLowerCase().includes(n.toLowerCase()));
-      if (i >= 0) return i;
-    }
-    return -1;
-  };
-
-  const iEmpresa    = idxOf(['Empresa']);
-  const iTemp       = idxOf(['Tempera','Temp']);
-  const iProd       = idxOf(['Produto']);
-  const iSpec       = idxOf(['Especif']);
-  const iValor      = idxOf(['Valor Final','Valor']);
-  const iEtapa      = idxOf(['Etapa']);
-  const iData       = idxOf(['Data Proposta','Data 1']);
-  const iCatTop     = idxOf(['Categoria Top']);
-
-  const getCell = (row, idx) => {
-    if (idx < 0) return '';
-    const c = row.c && row.c[idx];
-    if (!c) return '';
-    if (c.v !== null && c.v !== undefined) return c.v;
-    return c.f || '';
-  };
-
-  const rows = [];
-  for (const row of dataRows) {
-    if (!row.c) continue;
-    const empresa = String(getCell(row, iEmpresa)||'').trim();
-    if (!empresa || empresa === 'Empresa') continue;
-    const temp    = String(getCell(row, iTemp)||'').trim();
-    const prod    = String(getCell(row, iProd)||'').trim();
-    const spec    = String(getCell(row, iSpec)||'').trim();
-    const etapa   = String(getCell(row, iEtapa)||'').trim();
-    const catTop  = String(getCell(row, iCatTop)||'').trim();
-    const rawVal  = getCell(row, iValor);
-    const valor   = typeof rawVal === 'number' ? rawVal : parseVal(rawVal);
-    const dataRaw = getCell(row, iData);
-
-    // Parse date — Google Sheets returns Date objects as "Date(yyyy,mm,dd)"
-    let dataDate = null;
-    if (dataRaw) {
-      if (typeof dataRaw === 'string' && dataRaw.startsWith('Date(')) {
-        const parts = dataRaw.replace('Date(','').replace(')','').split(',');
-        dataDate = new Date(+parts[0], +parts[1], +parts[2]);
-      } else if (dataRaw instanceof Date) {
-        dataDate = dataRaw;
-      } else if (typeof dataRaw === 'number') {
-        // Serial date
-        dataDate = new Date((dataRaw - 25569) * 86400000);
+  // Linha META_ROW (índice 2): contém Meta, Realizado, %, Pipeline aberto
+  // Varredura: primeiro número grande = meta, segundo = realizado, último = pipeline
+  const metaRow = rows[META_ROW];
+  const numsMeta = [];
+  if (metaRow && metaRow.c) {
+    metaRow.c.forEach(c => {
+      if (!c) return;
+      const v = c.v;
+      if (typeof v === 'number' && v > 1000) numsMeta.push(v);
+      else if (c.f) {
+        const n = parseNum(c.f);
+        if (n > 1000) numsMeta.push(n);
       }
-    }
-
-    rows.push({ empresa, temp, prod, spec, etapa, catTop, valor, dataDate });
+    });
   }
-  return rows;
+  const meta      = numsMeta[0] || 0;
+  const realizado = numsMeta[1] || 0;
+  const pipeline  = numsMeta[numsMeta.length-1] || 0;
+
+  // Dados: linha DATA_START em diante
+  const items = [];
+  for (let i = DATA_START; i < rows.length; i++) {
+    const row = rows[i];
+    if (!row || !row.c) continue;
+    const empresa = getCellStr(row, COL.EMPRESA);
+    if (!empresa || empresa === 'Empresa' || empresa === 'ID') continue;
+    // Ignora linhas vazias ou de total
+    if (!empresa.match(/[a-zA-ZÀ-ú0-9]/)) continue;
+
+    const etapa   = getCellStr(row, COL.ETAPA);
+    const tempRaw = getCellStr(row, COL.TEMP);
+    const prod    = getCellStr(row, COL.PRODUTO);
+    const spec    = getCellStr(row, COL.SPEC);
+    const catTop  = getCellStr(row, COL.CAT_TOP);
+    const valor   = getCellNum(row, COL.VALOR);
+    const dataDate= parseDate(row, COL.DATA_PROP);
+
+    // Normaliza temperatura — remove emoji e espaços
+    const tempLower = tempRaw.replace(/[^\wÀ-ú\s]/g,'').trim().toLowerCase();
+
+    items.push({ empresa, etapa, temp: tempRaw, tempLower, prod, spec, catTop, valor, dataDate });
+  }
+
+  return { meta, realizado, pipeline, items };
 }
 
-// ─── SEMANAS DO MÊS ──────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// SEMANAS
+// ══════════════════════════════════════════════════════════════════
 function semanasDoMes(year, month) {
-  // Returns array of {label, start, end} for ~4 weeks
-  const weeks = [];
   const nDays = new Date(year, month+1, 0).getDate();
   const cuts = [1,8,15,22,nDays+1];
   const mNames = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  for (let i = 0; i < 4; i++) {
-    const s = cuts[i], e = cuts[i+1]-1;
-    weeks.push({
-      label: `S${i+1} ${s.toString().padStart(2,'0')}–${e.toString().padStart(2,'0')}/${mNames[month]}`,
-      start: new Date(year, month, s),
-      end:   new Date(year, month, e, 23, 59, 59)
-    });
-  }
-  return weeks;
+  return Array.from({length:4},(_,i)=>({
+    label: `S${i+1} ${String(cuts[i]).padStart(2,'0')}–${String(cuts[i+1]-1).padStart(2,'0')}/${mNames[month]}`,
+    start: new Date(year,month,cuts[i]),
+    end:   new Date(year,month,cuts[i+1]-1,23,59,59)
+  }));
 }
 
-function calcSemanal(rows, etapaFechado, year, month) {
-  const semanas = semanasDoMes(year, month);
-  const vals = semanas.map(sem => {
-    return rows
-      .filter(r => {
-        if (!r.dataDate) return false;
-        const etapaOk = r.etapa && (r.etapa.toLowerCase().includes('fechad') || r.etapa.toLowerCase().includes('ganho') || r.etapa.toLowerCase().includes('contrato'));
-        if (!etapaOk) return false;
-        return r.dataDate >= sem.start && r.dataDate <= sem.end;
-      })
-      .reduce((s, r) => s + (r.valor||0), 0);
-  });
-  return { semanas, vals };
-}
+// ══════════════════════════════════════════════════════════════════
+// RENDER VENDEDOR
+// ══════════════════════════════════════════════════════════════════
+let charts = {};
 
-// ─── PARSE COMPARATIVO ───────────────────────────────────────────────────────
-function parseComparativo(table) {
-  // Read raw values by scanning rows
-  const rows = table.rows;
-  const cols = table.cols;
-
-  function getV(row, colIdx) {
-    if (!row || !row.c || !row.c[colIdx]) return null;
-    const c = row.c[colIdx];
-    return c.v !== null && c.v !== undefined ? c.v : (c.f ? parseVal(c.f) : null);
-  }
-
-  // Find the "META vs REALIZADO" section — scan for rows with vendor names
-  // We look for rows where col A/B = 'Ari' or 'Assunta'
-  let ariRow = null, assRow = null;
-  for (const row of rows) {
-    if (!row.c) continue;
-    const a = String(row.c[0]?.v || row.c[0]?.f || '').trim();
-    const b = String(row.c[1]?.v || row.c[1]?.f || '').trim();
-    const name = a || b;
-    if (name === 'Ari' && !ariRow) ariRow = row;
-    if (name === 'Assunta' && !assRow) assRow = row;
-  }
-
-  // From the screenshot: cols for meta section:
-  // Col B=Vendedor, C=Meta Mês, D=Realizado Mês, E=%Meta, F=Acumulado, G=Projeção Ano, H=Gap Meta Mês
-  const parseRow = (row) => {
-    if (!row || !row.c) return {};
-    const vals = row.c.map(c => c ? (c.v !== null && c.v !== undefined ? c.v : parseVal(c.f||'')) : 0);
-    // Find non-zero numeric values in order
-    const nums = vals.filter(v => typeof v === 'number' && v !== 0);
-    return {
-      metaMes:    vals[2] || vals[1] || nums[0] || 0,
-      realizado:  vals[3] || nums[1] || 0,
-      pctMeta:    vals[4] || 0,
-      acumulado:  vals[5] || nums[2] || 0,
-      projecao:   vals[6] || 0,
-      gapMeta:    vals[7] || 0,
-    };
-  };
-
-  return {
-    ari: parseRow(ariRow),
-    ass: parseRow(assRow),
-  };
-}
-
-// ─── RENDER ───────────────────────────────────────────────────────────────────
-let prodChartInst = null, evolAriInst = null, evolAssInst = null;
-
-function renderVendedor(id, rows, comp, metaMes, nome, meses) {
-  const suffix = id; // 'Ari' or 'Ass'
+function renderVendedor(id, data, nomeLabel) {
+  const { meta, realizado, pipeline, items } = data;
   const now = new Date();
   const year = now.getFullYear(), month = now.getMonth();
 
-  // KPIs do mês
-  const realMes    = comp.realizado || 0;
-  const pipeline   = comp.acumulado || rows.filter(r => r.etapa && !r.etapa.toLowerCase().includes('perdid') && !r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
-  const abertoVal  = rows.filter(r => r.etapa && !r.etapa.toLowerCase().includes('fechad') && !r.etapa.toLowerCase().includes('perdid') && !r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
-  const qtd        = rows.filter(r => r.etapa && !r.etapa.toLowerCase().includes('perdid') && !r.etapa.toLowerCase().includes('cancelad')).length;
-  const gapAcum    = comp.gapMeta || 0;
-  const pct        = metaMes > 0 ? (realMes / metaMes * 100) : 0;
-  const falta      = Math.max(metaMes - realMes, 0);
-  const dias       = diasUteisRestantes();
-  const pctAberto  = abertoVal > 0 ? Math.round(falta / abertoVal * 100) : 0;
-  const possivel   = abertoVal >= falta;
+  // Filtra itens ativos (não perdidos/cancelados)
+  const ativos = items.filter(r => {
+    const e = r.etapa.toLowerCase();
+    return !e.includes('perdid') && !e.includes('cancelad');
+  });
 
-  set(`meta${suffix}`, `Meta ${mesLabel()}: ${fmtR(metaMes)}`);
-  set(`pct${suffix}`,  pct.toFixed(1) + '%');
-  set(`real${suffix}`, fmtK(realMes));
-  set(`aberto${suffix}`, fmtK(abertoVal));
-  set(`qtd${suffix}`,  qtd);
-  set(`gap${suffix}`,  fmtK(Math.abs(gapAcum)));
+  // Em aberto = ativos não fechados
+  const emAberto = ativos.filter(r => !r.etapa.toLowerCase().includes('fechad'));
+  const abertoVal = emAberto.reduce((s,r)=>s+(r.valor||0),0);
+  const qtd = ativos.length;
 
-  // Conta rápida
-  set(`crTitle${suffix}`, `Conta rápida — ${dias} dia${dias!==1?'s':''} útil${dias!==1?'s':''} restante${dias!==1?'s':''}`);
-  set(`crFalta${suffix}`, fmtR(falta));
-  set(`crPct${suffix}`,   pctAberto + '%');
-  const stEl = document.getElementById(`crStatus${suffix}`);
+  // Gap acumulado = meta acumulada até hoje - realizado acumulado
+  // Usamos o valor da planilha (pipeline = pipeline em aberto total)
+  const pct = meta > 0 ? (realizado/meta*100) : 0;
+  const falta = Math.max(meta - realizado, 0);
+  const dias = diasUteisRestantes();
+  const pctAberto = abertoVal > 0 ? Math.round(falta/abertoVal*100) : 0;
+  const possivel = abertoVal >= falta;
+
+  set(`meta${id}`, `Meta ${mesLabel().split(' ')[0]}: ${fmtR(meta)}`);
+
+  const pctEl = document.getElementById(`pct${id}`);
+  if (pctEl) { pctEl.innerHTML = pct.toFixed(1)+'%<span>da meta</span>'; }
+
+  set(`real${id}`,   fmtK(realizado));
+  set(`aberto${id}`, fmtK(abertoVal));
+  set(`qtd${id}`,    qtd);
+  set(`gap${id}`,    fmtK(falta)); // gap = quanto falta
+
+  set(`crTitle${id}`, `Conta rápida — ${dias} dia${dias!==1?'s':''} útil${dias!==1?'s':''} restante${dias!==1?'s':''}`);
+  set(`crFalta${id}`, fmtR(falta));
+  set(`crPct${id}`,   pctAberto + '%');
+  const stEl = document.getElementById(`crStatus${id}`);
   if (stEl) { stEl.textContent = possivel ? '✓ Possível' : '✗ Atenção'; stEl.style.color = possivel ? '#7dc148' : '#e24b4a'; }
 
   // Patrocínio Top of Mind
-  const topRows = rows.filter(r => r.catTop && r.catTop.toLowerCase().includes('top') && r.catTop.toLowerCase().includes('mind') || r.prod && r.prod.toLowerCase().includes('patrocínio'));
-  const patEl = document.getElementById(`pat${suffix}`);
+  const topItems = ativos.filter(r =>
+    r.catTop.toLowerCase().includes('top') ||
+    r.prod.toLowerCase().includes('patrocínio') ||
+    r.prod.toLowerCase().includes('top of mind')
+  );
+  const patEl = document.getElementById(`pat${id}`);
   if (patEl) {
-    if (topRows.length === 0) {
-      patEl.innerHTML = '<tr><td colspan="4" style="color:var(--text-muted);font-size:11px;padding:8px 6px;">Nenhuma proposta de patrocínio</td></tr>';
+    if (!topItems.length) {
+      patEl.innerHTML = '<tr><td colspan="4" style="color:var(--text-muted);font-size:11px;padding:8px 0">Nenhuma proposta de patrocínio</td></tr>';
     } else {
-      patEl.innerHTML = topRows.map(r => {
-        const temp = (r.temp||'').toLowerCase();
-        const badgeClass = temp.includes('quente') ? 'quente' : temp.includes('morno') ? 'morno' : 'frio';
-        const emoji = temp.includes('quente') ? '🔴' : temp.includes('morno') ? '🟡' : '🔵';
-        return `<tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
-          <td style="font-weight:500;color:var(--text);">${r.empresa}</td>
-          <td style="color:var(--text-muted);font-size:11px;">${r.spec||'—'}</td>
-          <td style="text-align:right;font-weight:600;color:var(--cold);">${r.valor ? fmtR(r.valor) : '—'}</td>
-          <td style="text-align:center;"><span class="badge ${badgeClass}">${emoji} ${r.temp||'—'}</span></td>
+      patEl.innerHTML = topItems.map(r => {
+        const t = r.tempLower;
+        const cls = t.includes('quente') ? 'quente' : t.includes('morno') ? 'morno' : 'frio';
+        const em  = t.includes('quente') ? '🔴' : t.includes('morno') ? '🟡' : '🔵';
+        return `<tr style="border-bottom:1px solid rgba(255,255,255,0.05)">
+          <td style="font-weight:500;color:var(--text)">${r.empresa}</td>
+          <td style="color:var(--text-muted);font-size:11px">${r.spec||'—'}</td>
+          <td style="text-align:right;font-weight:600;color:var(--cold)">${r.valor?fmtR(r.valor):'—'}</td>
+          <td style="text-align:center"><span class="badge ${cls}">${em} ${r.temp.replace(/[🔴🟡🔵]/g,'').trim()}</span></td>
         </tr>`;
       }).join('');
     }
   }
 
-  // Semanas
-  const { semanas, vals } = calcSemanal(rows, 'fechad', year, month);
-  const semEl = document.getElementById(`semLabels${suffix}`);
+  // Gráfico semanal (fechados no mês)
+  const semanas = semanasDoMes(year, month);
+  const semVals = semanas.map(sem =>
+    ativos.filter(r => {
+      if (!r.dataDate) return false;
+      const e = r.etapa.toLowerCase();
+      if (!e.includes('fechad') && !e.includes('ganho') && !e.includes('contrato')) return false;
+      return r.dataDate >= sem.start && r.dataDate <= sem.end;
+    }).reduce((s,r)=>s+(r.valor||0),0)
+  );
+
+  const semEl = document.getElementById(`semLabels${id}`);
   if (semEl) semEl.innerHTML = semanas.map(s=>`<span>${s.label}</span>`).join('');
 
-  const color = suffix === 'Ari' ? '#0eaae2' : '#7dc148';
-  const canvasId = `evol${suffix}`;
-  const existing = suffix === 'Ari' ? evolAriInst : evolAssInst;
-  if (existing) existing.destroy();
-  const chart = new Chart(document.getElementById(canvasId), {
+  const color = id === 'Ari' ? '#0eaae2' : '#7dc148';
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(document.getElementById(`evol${id}`), {
     type:'bar',
-    data:{labels:['S1','S2','S3','S4'],datasets:[{label:'Fechado',data:vals,backgroundColor:color+'bb',borderRadius:6,borderSkipped:false}]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c2333',borderColor:'rgba(14,170,226,0.3)',borderWidth:1,titleColor:'#e6edf3',bodyColor:'#8b949e',padding:10,callbacks:{label:i=>' '+fmtR(i.raw)}}},scales:{x:{ticks:{color:'#8b949e',font:{size:10}},grid:{display:false},border:{display:false}},y:{ticks:{color:'#8b949e',font:{size:10},callback:v=>'R$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}}}}
+    data:{labels:['S1','S2','S3','S4'],datasets:[{label:'Fechado',data:semVals,backgroundColor:color+'bb',borderRadius:6,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c2333',borderWidth:1,titleColor:'#e6edf3',bodyColor:'#8b949e',padding:10,callbacks:{label:i=>' '+fmtR(i.raw)}}},scales:{x:{ticks:{color:'#8b949e',font:{size:10}},grid:{display:false},border:{display:false}},y:{ticks:{color:'#8b949e',font:{size:10},callback:v=>'R$'+Math.round(v/1000)+'K'},grid:{color:'rgba(255,255,255,0.04)'},border:{display:false}}}}
   });
-  if (suffix === 'Ari') evolAriInst = chart; else evolAssInst = chart;
 
-  // Lista marcas quentes/mornas
-  const listEl = document.getElementById(`lista${suffix}`);
+  // Lista quentes/mornas
+  const listEl = document.getElementById(`lista${id}`);
   if (listEl) {
-    // Group by empresa, sum valores, get max temp
     const grouped = {};
-    rows.forEach(r => {
-      const temp = (r.temp||'').toLowerCase();
-      if (!temp.includes('quente') && !temp.includes('morno')) return;
-      if (r.etapa && (r.etapa.toLowerCase().includes('perdid')||r.etapa.toLowerCase().includes('cancelad'))) return;
-      if (!grouped[r.empresa]) grouped[r.empresa] = { empresa:r.empresa, prods:[], valor:0, temp: r.temp };
+    emAberto.forEach(r => {
+      const t = r.tempLower;
+      if (!t.includes('quente') && !t.includes('morno')) return;
+      if (!grouped[r.empresa]) grouped[r.empresa] = {empresa:r.empresa, prods:[], valor:0, tempLower:t};
       grouped[r.empresa].valor += r.valor||0;
       if (r.prod && !grouped[r.empresa].prods.includes(r.prod)) grouped[r.empresa].prods.push(r.prod);
-      // Quente > Morno
-      if (temp.includes('quente')) grouped[r.empresa].temp = r.temp;
+      if (t.includes('quente')) grouped[r.empresa].tempLower = 'quente';
     });
-    const sorted = Object.values(grouped).sort((a,b) => {
-      const ta = (a.temp||'').toLowerCase().includes('quente') ? 1 : 0;
-      const tb = (b.temp||'').toLowerCase().includes('quente') ? 1 : 0;
-      if (ta !== tb) return tb - ta;
-      return b.valor - a.valor;
+    const sorted = Object.values(grouped).sort((a,b)=>{
+      const qa = a.tempLower.includes('quente')?1:0, qb = b.tempLower.includes('quente')?1:0;
+      if (qa!==qb) return qb-qa;
+      return b.valor-a.valor;
     });
-    listEl.innerHTML = sorted.map(g => {
-      const cls = (g.temp||'').toLowerCase().includes('quente') ? 'quente' : 'morno';
-      return `<div class="aberto-row ${cls}"><div class="temp-dot ${cls}"></div><span class="pipe-empresa">${g.empresa}</span><span class="pipe-prod">${g.prods.join(' + ')||'—'}</span><span class="pipe-val">${g.valor ? fmtR(g.valor) : '—'}</span></div>`;
-    }).join('') || '<div style="color:var(--text-muted);font-size:12px;padding:8px;">Nenhuma proposta quente/morna encontrada</div>';
+    listEl.innerHTML = sorted.length
+      ? sorted.map(g=>{
+          const cls = g.tempLower.includes('quente')?'quente':'morno';
+          return `<div class="aberto-row ${cls}"><div class="temp-dot ${cls}"></div><span class="pipe-empresa">${g.empresa}</span><span class="pipe-prod">${g.prods.join(' + ')||'—'}</span><span class="pipe-val">${g.valor?fmtR(g.valor):'—'}</span></div>`;
+        }).join('')
+      : '<div style="color:var(--text-muted);font-size:12px;padding:8px">Nenhuma proposta quente/morna</div>';
   }
 }
 
-function renderComparativo(compData, rowsAri, rowsAss) {
-  const render = (elId, barId, comp, rows, color) => {
-    const meta    = comp.metaMes || 0;
-    const real    = comp.realizado || 0;
-    const pct     = meta > 0 ? (real/meta*100) : 0;
-    const acum    = comp.acumulado || 0;
-    const gap     = comp.gapMeta || 0;
-    const aberto  = rows.filter(r=>r.etapa&&!r.etapa.toLowerCase().includes('fechad')&&!r.etapa.toLowerCase().includes('perdid')&&!r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
-    const quentes = rows.filter(r=>(r.temp||'').toLowerCase().includes('quente')).length;
-    const mornos  = rows.filter(r=>(r.temp||'').toLowerCase().includes('morno')).length;
-
-    const rows2 = [
-      ['Meta Mês', fmtR(meta), ''],
-      ['Realizado Mês', fmtR(real), 'green'],
-      ['% da meta', pct.toFixed(1)+'%', 'amber'],
-      ['Em aberto', fmtK(aberto), 'blue'],
-      ['Gap acumulado', '− '+fmtK(Math.abs(gap)), 'red'],
-      ['Marcas quentes', quentes, ''],
-      ['Marcas mornas', mornos, ''],
-    ];
+// ══════════════════════════════════════════════════════════════════
+// RENDER COMPARATIVO
+// ══════════════════════════════════════════════════════════════════
+function renderComparativo(dAri, dAss) {
+  const render = (elId, barId, d) => {
+    const pct = d.meta>0 ? (d.realizado/d.meta*100) : 0;
+    const emAberto = d.items.filter(r=>!r.etapa.toLowerCase().includes('fechad')&&!r.etapa.toLowerCase().includes('perdid')&&!r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
+    const quentes = d.items.filter(r=>r.tempLower.includes('quente')).length;
+    const mornos  = d.items.filter(r=>r.tempLower.includes('morno')).length;
+    const falta   = Math.max(d.meta - d.realizado, 0);
+    const html = [
+      ['Meta Mês',       fmtR(d.meta),       ''],
+      ['Realizado Mês',  fmtR(d.realizado),  'green'],
+      ['% da meta',      pct.toFixed(1)+'%', 'amber'],
+      ['Em aberto',      fmtK(emAberto),     'blue'],
+      ['Falta para meta',fmtK(falta),        'red'],
+      ['Marcas quentes', quentes,            ''],
+      ['Marcas mornas',  mornos,             ''],
+    ].map(([l,v,c])=>`<div class="comp-row"><span class="comp-row-label">${l}</span><span class="comp-row-val ${c}">${v}</span></div>`).join('');
     const el = document.getElementById(elId);
-    if (el) el.innerHTML = rows2.map(([l,v,c])=>`<div class="comp-row"><span class="comp-row-label">${l}</span><span class="comp-row-val ${c}">${v}</span></div>`).join('');
+    if (el) el.innerHTML = html;
     const bar = document.getElementById(barId);
     if (bar) bar.style.width = Math.min(pct,100)+'%';
   };
-  render('compAri','compBarAri', compData.ari, rowsAri, '#0eaae2');
-  render('compAss','compBarAss', compData.ass, rowsAss, '#7dc148');
+  render('compAri','compBarAri',dAri);
+  render('compAss','compBarAss',dAss);
 }
 
-function renderProdutos(rowsAri, rowsAss) {
-  // Group by produto, count e somar valores
-  const PRODUTOS = ['Top of Mind Patrocínio','Eu Quero Essa Estrela','Impressos - Os Eleitos','Impressos - Os Vencedores','RH Top Sync','RH Pra Você','EncontRHo','Merchan','Branded Content / Outros'];
+// ══════════════════════════════════════════════════════════════════
+// RENDER PRODUTOS
+// ══════════════════════════════════════════════════════════════════
+function renderProdutos(dAri, dAss) {
+  const ORDEM = [
+    'Top of Mind Patrocínio','Eu Quero Essa Estrela','Impressos - Os Eleitos',
+    'Impressos - Os Vencedores','RH Top Sync','RH Pra Você','EncontRHo','Merchan',
+    'Branded Content / Outros'
+  ];
 
-  const group = (rows) => {
+  const groupBy = (items) => {
     const g = {};
-    rows.forEach(r => {
+    items.forEach(r => {
       if (!r.prod) return;
-      let key = PRODUTOS.find(p => r.prod.toLowerCase().includes(p.toLowerCase().split(' ').slice(0,3).join(' ').toLowerCase()));
-      if (!key) key = r.prod;
-      if (!g[key]) g[key] = {qtd:0, val:0};
+      const key = ORDEM.find(p => r.prod.toLowerCase().includes(p.toLowerCase().substring(0,10))) || r.prod;
+      if (!g[key]) g[key] = {qtd:0,val:0};
       g[key].qtd++; g[key].val += r.valor||0;
     });
     return g;
   };
-  const gAri = group(rowsAri);
-  const gAss = group(rowsAss);
 
-  const allProds = [...new Set([...Object.keys(gAri), ...Object.keys(gAss)])];
+  const gA = groupBy(dAri.items.filter(r=>!r.etapa.toLowerCase().includes('perdid')));
+  const gB = groupBy(dAss.items.filter(r=>!r.etapa.toLowerCase().includes('perdid')));
+  const allP = [...new Set([...ORDEM, ...Object.keys(gA), ...Object.keys(gB)])];
 
-  // Chart
-  const labels = allProds.slice(0,8);
-  const dataAri = labels.map(p => (gAri[p]||{qtd:0}).qtd);
-  const dataAss = labels.map(p => (gAss[p]||{qtd:0}).qtd);
-  const totals  = labels.map((p,i) => dataAri[i]+dataAss[i]);
+  // Gráfico qtd
+  const labels = allP.filter(p => (gA[p]||{qtd:0}).qtd+(gB[p]||{qtd:0}).qtd > 0).slice(0,8);
+  const dqA = labels.map(p=>(gA[p]||{qtd:0}).qtd);
+  const dqB = labels.map(p=>(gB[p]||{qtd:0}).qtd);
+  const tots = labels.map((_,i)=>dqA[i]+dqB[i]);
 
-  if (prodChartInst) prodChartInst.destroy();
-  prodChartInst = new Chart(document.getElementById('prodChart'), {
+  if (charts.prod) charts.prod.destroy();
+  charts.prod = new Chart(document.getElementById('prodChart'),{
     type:'bar',
     data:{labels,datasets:[
-      {label:'Ari',    data:dataAri, backgroundColor:'#0eaae2',borderRadius:4,borderSkipped:false},
-      {label:'Assunta',data:dataAss, backgroundColor:'#7dc148',borderRadius:4,borderSkipped:false}
+      {label:'Ari',    data:dqA,backgroundColor:'#0eaae2',borderRadius:4,borderSkipped:false},
+      {label:'Assunta',data:dqB,backgroundColor:'#7dc148',borderRadius:4,borderSkipped:false}
     ]},
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c2333',borderColor:'rgba(14,170,226,0.3)',borderWidth:1,titleColor:'#e6edf3',bodyColor:'#8b949e',padding:12,callbacks:{title:i=>i[0].label,beforeBody:i=>'Total: '+totals[i[0].dataIndex]+' propostas',label:i=>' '+i.dataset.label+': '+i.raw+' ('+Math.round(i.raw/totals[i.dataIndex]*100)+'%)'}}},scales:{x:{ticks:{color:'#8b949e',font:{size:11},maxRotation:30,autoSkip:false},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.08)'}},y:{ticks:{color:'#8b949e',stepSize:5,font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.08)'}}}}
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'#1c2333',borderWidth:1,titleColor:'#e6edf3',bodyColor:'#8b949e',padding:12,callbacks:{title:i=>i[0].label,beforeBody:i=>'Total: '+tots[i[0].dataIndex]+' propostas',label:i=>' '+i.dataset.label+': '+i.raw+' ('+Math.round(i.raw/tots[i.dataIndex]*100)+'%)'}}},scales:{x:{ticks:{color:'#8b949e',font:{size:11},maxRotation:30,autoSkip:false},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.08)'}},y:{ticks:{color:'#8b949e',stepSize:5,font:{size:11}},grid:{color:'rgba(255,255,255,0.04)'},border:{color:'rgba(255,255,255,0.08)'}}}}
   });
 
-  // Tabela
+  // Tabela valor
   const tbody = document.getElementById('prodValTable');
   if (tbody) {
-    const allP = [...new Set([...PRODUTOS, ...allProds])];
-    let html = '';
-    let totalAri=0, totalAss=0;
-    allP.forEach((p,i) => {
-      const vA = (gAri[p]||{val:0}).val;
-      const vB = (gAss[p]||{val:0}).val;
-      const vT = vA + vB;
-      totalAri+=vA; totalAss+=vB;
-      if (!vA && !vB) return;
-      const bg = i%2===0?'':'background:var(--bg-card2);';
-      html += `<tr style="${bg}border-bottom:1px solid rgba(255,255,255,0.05);">
-        <td style="padding:10px 14px;color:var(--text);font-weight:500;">${p}</td>
-        <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600;">${vA?fmtR(vA):'—'}</td>
-        <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600;">${vB?fmtR(vB):'—'}</td>
-        <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700;">${vT?fmtR(vT):'—'}</td>
+    let html='', totA=0, totB=0;
+    allP.forEach((p,i)=>{
+      const vA=(gA[p]||{val:0}).val, vB=(gB[p]||{val:0}).val;
+      if(!vA&&!vB) return;
+      totA+=vA; totB+=vB;
+      const bg = i%2===1 ? 'background:var(--bg-card2);' : '';
+      html+=`<tr style="${bg}border-bottom:1px solid rgba(255,255,255,0.05)">
+        <td style="padding:10px 14px;color:var(--text);font-weight:500">${p}</td>
+        <td style="padding:10px 14px;text-align:right;color:#0eaae2;font-weight:600">${vA?fmtR(vA):'—'}</td>
+        <td style="padding:10px 14px;text-align:right;color:#7dc148;font-weight:600">${vB?fmtR(vB):'—'}</td>
+        <td style="padding:10px 14px;text-align:right;color:var(--text);font-weight:700">${fmtR(vA+vB)}</td>
       </tr>`;
     });
-    html += `<tr style="background:rgba(14,170,226,0.08);border-top:2px solid rgba(14,170,226,0.3);">
-      <td style="padding:12px 14px;color:var(--text);font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;">TOTAL</td>
-      <td style="padding:12px 14px;text-align:right;color:#0eaae2;font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;">${fmtR(totalAri)}</td>
-      <td style="padding:12px 14px;text-align:right;color:#7dc148;font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;">${fmtR(totalAss)}</td>
-      <td style="padding:12px 14px;text-align:right;color:var(--text);font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;">${fmtR(totalAri+totalAss)}</td>
+    html+=`<tr style="background:rgba(14,170,226,0.08);border-top:2px solid rgba(14,170,226,0.3)">
+      <td style="padding:12px 14px;color:var(--text);font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px">TOTAL</td>
+      <td style="padding:12px 14px;text-align:right;color:#0eaae2;font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px">${fmtR(totA)}</td>
+      <td style="padding:12px 14px;text-align:right;color:#7dc148;font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px">${fmtR(totB)}</td>
+      <td style="padding:12px 14px;text-align:right;color:var(--text);font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px">${fmtR(totA+totB)}</td>
     </tr>`;
     tbody.innerHTML = html;
   }
 }
 
-function mesLabel() {
-  return new Date().toLocaleString('pt-BR',{month:'long'}).replace(/^\w/,c=>c.toUpperCase());
-}
-
-function set(id, val) {
-  const el = document.getElementById(id);
-  if (el) el.textContent = val;
-}
-
-// ─── MAIN ─────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════════════
+// MAIN
+// ══════════════════════════════════════════════════════════════════
 async function init() {
   try {
-    // Fetch all sheets in parallel
-    const [tableAri, tableAss, tableComp] = await Promise.all([
-      fetchSheet(SHEET_NAMES.ari),
-      fetchSheet(SHEET_NAMES.ass),
-      fetchSheet(SHEET_NAMES.comp),
+    const [tableAri, tableAss] = await Promise.all([
+      fetchSheet('Ari'),
+      fetchSheet('Assunta'),
     ]);
 
-    const rowsAri  = parsePipeline(tableAri);
-    const rowsAss  = parsePipeline(tableAss);
-    const compData = parseComparativo(tableComp);
+    const dAri = parsePipeline(tableAri);
+    const dAss = parsePipeline(tableAss);
 
     // Header
-    const now = new Date();
-    const label = now.toLocaleString('pt-BR',{month:'long',year:'numeric'}).replace(/^\w/,c=>c.toUpperCase());
+    const label = mesLabel();
     set('headerDate', label);
     set('visaoTitle', `Visão geral — ${label}`);
 
-    // Metas (da planilha Comparativo ou fallback)
-    const metaAri = compData.ari.metaMes || 575000;
-    const metaAss = compData.ass.metaMes || 200000;
-    const metaTotal = metaAri + metaAss;
-    const realTotal = (compData.ari.realizado||0) + (compData.ass.realizado||0);
-    const abertoAri = rowsAri.filter(r=>r.etapa&&!r.etapa.toLowerCase().includes('fechad')&&!r.etapa.toLowerCase().includes('perdid')&&!r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
-    const abertoAss = rowsAss.filter(r=>r.etapa&&!r.etapa.toLowerCase().includes('fechad')&&!r.etapa.toLowerCase().includes('perdid')&&!r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
+    // Totais visão geral
+    const metaTotal  = dAri.meta + dAss.meta;
+    const realTotal  = dAri.realizado + dAss.realizado;
+    const pctTotal   = metaTotal > 0 ? (realTotal/metaTotal*100) : 0;
+
+    const abertoAri = dAri.items.filter(r=>!r.etapa.toLowerCase().includes('fechad')&&!r.etapa.toLowerCase().includes('perdid')&&!r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
+    const abertoAss = dAss.items.filter(r=>!r.etapa.toLowerCase().includes('fechad')&&!r.etapa.toLowerCase().includes('perdid')&&!r.etapa.toLowerCase().includes('cancelad')).reduce((s,r)=>s+(r.valor||0),0);
     const abertoTotal = abertoAri + abertoAss;
-    const pctTotal = metaTotal > 0 ? (realTotal/metaTotal*100) : 0;
-    const aquentesAri = rowsAri.filter(r=>(r.temp||'').toLowerCase().includes('quente')||(r.temp||'').toLowerCase().includes('morno')).length;
-    const aquentesAss = rowsAss.filter(r=>(r.temp||'').toLowerCase().includes('quente')||(r.temp||'').toLowerCase().includes('morno')).length;
 
-    // Visão geral KPIs
-    set('kpiMeta',  fmtK(metaTotal));
-    set('kpiMetaSub', `Ari ${fmtK(metaAri)} · Assunta ${fmtK(metaAss)}`);
-    set('kpiReal',  fmtK(realTotal));
-    set('kpiRealSub', `${pctTotal.toFixed(1)}% da meta total`);
-    const barEl = document.getElementById('kpiRealBar');
-    if (barEl) barEl.style.width = Math.min(pctTotal,100)+'%';
-    set('kpiAberto',    fmtK(abertoTotal));
-    set('kpiAquecidas', aquentesAri + aquentesAss);
-    set('kpiAquecSub',  `Ari ${aquentesAri} · Assunta ${aquentesAss}`);
+    const aqAri = dAri.items.filter(r=>r.tempLower.includes('quente')||r.tempLower.includes('morno')).length;
+    const aqAss = dAss.items.filter(r=>r.tempLower.includes('quente')||r.tempLower.includes('morno')).length;
 
-    // Vendedores
-    renderVendedor('Ari', rowsAri, compData.ari, metaAri, 'Ari');
-    renderVendedor('Ass', rowsAss, compData.ass, metaAss, 'Assunta');
+    set('kpiMeta',       fmtK(metaTotal));
+    set('kpiMetaSub',    `Ari ${fmtK(dAri.meta)} · Assunta ${fmtK(dAss.meta)}`);
+    set('kpiReal',       fmtK(realTotal));
+    set('kpiRealSub',    `${pctTotal.toFixed(1)}% da meta total`);
+    document.getElementById('kpiRealBar').style.width = Math.min(pctTotal,100)+'%';
+    set('kpiAberto',     fmtK(abertoTotal));
+    set('kpiAquecidas',  aqAri + aqAss);
+    set('kpiAquecSub',   `Ari ${aqAri} · Assunta ${aqAss}`);
 
-    // Comparativo
-    renderComparativo(compData, rowsAri, rowsAss);
+    renderVendedor('Ari', dAri);
+    renderVendedor('Ass', dAss);
+    renderComparativo(dAri, dAss);
+    renderProdutos(dAri, dAss);
 
-    // Produtos
-    renderProdutos(rowsAri, rowsAss);
-
-    // Show
     document.getElementById('loadingOverlay').style.display = 'none';
     document.getElementById('mainContent').style.display = '';
     document.getElementById('footerEl').style.display = '';
@@ -773,11 +730,11 @@ async function init() {
     console.error(e);
     document.getElementById('loadingOverlay').innerHTML = `
       <div class="error-box">
-        <div style="font-size:24px;margin-bottom:8px;">⚠️</div>
-        <div style="font-weight:700;margin-bottom:4px;">Erro ao carregar dados</div>
-        <div style="font-size:11px;opacity:0.8;">${e.message}</div>
-        <div style="margin-top:12px;font-size:11px;">Verifique se a planilha está pública e tente novamente.</div>
-        <button onclick="location.reload()" style="margin-top:16px;padding:8px 20px;background:#0eaae2;color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:600;">Tentar novamente</button>
+        <div style="font-size:24px;margin-bottom:8px">⚠️</div>
+        <div style="font-weight:700;margin-bottom:6px">Erro ao carregar dados</div>
+        <div style="font-size:11px;opacity:0.8;margin-bottom:4px">${e.message}</div>
+        <div style="font-size:11px;margin-bottom:16px">Verifique se a planilha está pública e tente novamente.</div>
+        <button onclick="location.reload()" style="padding:8px 20px;background:#0eaae2;color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'Montserrat',sans-serif;font-weight:600">Tentar novamente</button>
       </div>`;
   }
 }
