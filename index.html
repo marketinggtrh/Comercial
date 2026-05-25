@@ -405,23 +405,45 @@ async function fetchSheet(sheetName) {
 //   F(5)=Acumulado, G(6)=ProjeçãoAno, H(7)=Gap Meta Mês
 // ══════════════════════════════════════════════════════════════════
 function parseComparativo(table) {
+  // Linha 6 (índice 5) = Ari, Linha 7 (índice 6) = Assunta
+  // Col A(0)=Vendedor, B(1)=Meta Mês, C(2)=Realizado Mês, D(3)=%Meta,
+  // E(4)=Acumulado, F(5)=ProjeçãoAno, G(6)=Gap Meta Mês... mas há col D=separador
+  // Pela screenshot: A=Vendedor, B=Meta, C=Realizado, D=%, E=Acumulado, F=Projeção, G=Gap... H=Gap
+  // Vamos escanear a linha inteira buscando números > 1000
   const rows = table.rows;
   const result = { ari:{meta:0,realizado:0,gap:0}, ass:{meta:0,realizado:0,gap:0} };
   if (!rows) return result;
+
   for (const row of rows) {
     if (!row || !row.c) continue;
-    // Vendedor está na col B (índice 1) ou col A (índice 0)
-    const nomeA = String(row.c[0]?.v || row.c[0]?.f || '').trim();
-    const nomeB = String(row.c[1]?.v || row.c[1]?.f || '').trim();
-    const nome = nomeA === 'Ari' || nomeA === 'Assunta' ? nomeA : nomeB;
-    if (nome !== 'Ari' && nome !== 'Assunta') continue;
-    // Índice base depende de onde está o nome
-    const base = (nomeA === 'Ari' || nomeA === 'Assunta') ? 0 : 1;
-    const meta      = getCellNum(row, base+1); // col C
-    const realizado = getCellNum(row, base+2); // col D
-    const gap       = getCellNum(row, base+6); // col H
-    if (nome === 'Ari')    { result.ari = {meta, realizado, gap}; }
-    if (nome === 'Assunta'){ result.ass = {meta, realizado, gap}; }
+    // Busca "Ari" ou "Assunta" em qualquer coluna da linha
+    let nome = '';
+    let nomeCol = -1;
+    for (let i = 0; i < Math.min(row.c.length, 5); i++) {
+      const v = String(row.c[i]?.v || row.c[i]?.f || '').trim();
+      if (v === 'Ari' || v === 'Assunta') { nome = v; nomeCol = i; break; }
+    }
+    if (!nome) continue;
+
+    // Coleta todos os números da linha em ordem
+    const nums = [];
+    for (let i = nomeCol+1; i < row.c.length; i++) {
+      const c = row.c[i];
+      if (!c) continue;
+      let v = c.v;
+      if (typeof v !== 'number') {
+        if (c.f) v = parseNum(c.f);
+        else continue;
+      }
+      if (typeof v === 'number' && !isNaN(v) && Math.abs(v) > 100) nums.push(v);
+    }
+    // nums[0]=Meta, nums[1]=Realizado, nums[2]=Acumulado, nums[3]=Projeção, nums[4]=Gap
+    const meta      = nums[0] || 0;
+    const realizado = nums[1] || 0;
+    const gap       = nums[4] || nums[3] || 0;
+
+    if (nome === 'Ari')     result.ari = {meta, realizado, gap};
+    if (nome === 'Assunta') result.ass = {meta, realizado, gap};
   }
   return result;
 }
@@ -763,3 +785,4 @@ init();
 </script>
 </body>
 </html>
+
