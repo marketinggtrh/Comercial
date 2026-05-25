@@ -399,30 +399,39 @@ async function fetchSheet(sheetName) {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// PARSE PIPELINE
+// PARSE COMPARATIVO — lê Meta e Realizado da aba Comparativo
+// Estrutura: linha com "Ari" na col B (índice 1) tem:
+//   col B(1)=Vendedor, C(2)=Meta Mês, D(3)=Realizado Mês, E(4)=%Meta,
+//   F(5)=Acumulado, G(6)=ProjeçãoAno, H(7)=Gap Meta Mês
+// ══════════════════════════════════════════════════════════════════
+function parseComparativo(table) {
+  const rows = table.rows;
+  const result = { ari:{meta:0,realizado:0,gap:0}, ass:{meta:0,realizado:0,gap:0} };
+  if (!rows) return result;
+  for (const row of rows) {
+    if (!row || !row.c) continue;
+    // Vendedor está na col B (índice 1) ou col A (índice 0)
+    const nomeA = String(row.c[0]?.v || row.c[0]?.f || '').trim();
+    const nomeB = String(row.c[1]?.v || row.c[1]?.f || '').trim();
+    const nome = nomeA === 'Ari' || nomeA === 'Assunta' ? nomeA : nomeB;
+    if (nome !== 'Ari' && nome !== 'Assunta') continue;
+    // Índice base depende de onde está o nome
+    const base = (nomeA === 'Ari' || nomeA === 'Assunta') ? 0 : 1;
+    const meta      = getCellNum(row, base+1); // col C
+    const realizado = getCellNum(row, base+2); // col D
+    const gap       = getCellNum(row, base+6); // col H
+    if (nome === 'Ari')    { result.ari = {meta, realizado, gap}; }
+    if (nome === 'Assunta'){ result.ass = {meta, realizado, gap}; }
+  }
+  return result;
+}
+
+// ══════════════════════════════════════════════════════════════════
+// PARSE PIPELINE — lê apenas os itens do pipeline (linha 4+)
 // ══════════════════════════════════════════════════════════════════
 function parsePipeline(table) {
   const rows = table.rows;
-  if (!rows || rows.length < 4) return { meta:0, realizado:0, pipeline:0, items:[] };
-
-  // Linha META_ROW (índice 2): contém Meta, Realizado, %, Pipeline aberto
-  // Varredura: primeiro número grande = meta, segundo = realizado, último = pipeline
-  const metaRow = rows[META_ROW];
-  const numsMeta = [];
-  if (metaRow && metaRow.c) {
-    metaRow.c.forEach(c => {
-      if (!c) return;
-      const v = c.v;
-      if (typeof v === 'number' && v > 1000) numsMeta.push(v);
-      else if (c.f) {
-        const n = parseNum(c.f);
-        if (n > 1000) numsMeta.push(n);
-      }
-    });
-  }
-  const meta      = numsMeta[0] || 0;
-  const realizado = numsMeta[1] || 0;
-  const pipeline  = numsMeta[numsMeta.length-1] || 0;
+  if (!rows || rows.length < 4) return { items:[] };
 
   // Dados: linha DATA_START em diante
   const items = [];
@@ -448,7 +457,7 @@ function parsePipeline(table) {
     items.push({ empresa, etapa, temp: tempRaw, tempLower, prod, spec, catTop, valor, dataDate });
   }
 
-  return { meta, realizado, pipeline, items };
+  return { items };
 }
 
 // ══════════════════════════════════════════════════════════════════
@@ -470,8 +479,9 @@ function semanasDoMes(year, month) {
 // ══════════════════════════════════════════════════════════════════
 let charts = {};
 
-function renderVendedor(id, data, nomeLabel) {
-  const { meta, realizado, pipeline, items } = data;
+function renderVendedor(id, data, kpis) {
+  const { items } = data;
+  const { meta, realizado, gap } = kpis;
   const now = new Date();
   const year = now.getFullYear(), month = now.getMonth();
 
@@ -502,7 +512,7 @@ function renderVendedor(id, data, nomeLabel) {
   set(`real${id}`,   fmtK(realizado));
   set(`aberto${id}`, fmtK(abertoVal));
   set(`qtd${id}`,    qtd);
-  set(`gap${id}`,    fmtK(falta)); // gap = quanto falta
+  set(`gap${id}`,    fmtK(Math.abs(gap||falta)));
 
   set(`crTitle${id}`, `Conta rápida — ${dias} dia${dias!==1?'s':''} útil${dias!==1?'s':''} restante${dias!==1?'s':''}`);
   set(`crFalta${id}`, fmtR(falta));
@@ -683,13 +693,23 @@ function renderProdutos(dAri, dAss) {
 // ══════════════════════════════════════════════════════════════════
 async function init() {
   try {
-    const [tableAri, tableAss] = await Promise.all([
+    const [tableAri, tableAss, tableComp] = await Promise.all([
       fetchSheet('Ari'),
       fetchSheet('Assunta'),
+      fetchSheet('Comparativo'),
     ]);
 
-    const dAri = parsePipeline(tableAri);
-    const dAss = parsePipeline(tableAss);
+    const dAri  = parsePipeline(tableAri);
+    const dAss  = parsePipeline(tableAss);
+    const comp  = parseComparativo(tableComp);
+
+    // Injeta meta/realizado vindos do Comparativo nos dados
+    dAri.meta      = comp.ari.meta;
+    dAri.realizado = comp.ari.realizado;
+    dAri.gap       = comp.ari.gap;
+    dAss.meta      = comp.ass.meta;
+    dAss.realizado = comp.ass.realizado;
+    dAss.gap       = comp.ass.gap;
 
     // Header
     const label = mesLabel();
@@ -717,8 +737,8 @@ async function init() {
     set('kpiAquecidas',  aqAri + aqAss);
     set('kpiAquecSub',   `Ari ${aqAri} · Assunta ${aqAss}`);
 
-    renderVendedor('Ari', dAri);
-    renderVendedor('Ass', dAss);
+    renderVendedor('Ari', dAri, {meta:dAri.meta, realizado:dAri.realizado, gap:dAri.gap});
+    renderVendedor('Ass', dAss, {meta:dAss.meta, realizado:dAss.realizado, gap:dAss.gap});
     renderComparativo(dAri, dAss);
     renderProdutos(dAri, dAss);
 
